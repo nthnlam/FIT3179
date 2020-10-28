@@ -10,7 +10,7 @@
   },
   "style": "cell",
   "data": [
-    {"name": "winningPartyHighlight_store"},
+    {"name": "partyHighlight_store"},
     {
       "name": "source_1",
       "url": "https://raw.githubusercontent.com/nthnlam/FIT3179/main/data/HouseMembersElectedDownload-24310.csv",
@@ -60,16 +60,51 @@
       ]
     },
     {
-      "name": "winningPartyHighlight",
-      "update": "vlSelectionResolve(\"winningPartyHighlight_store\", \"union\", true)"
+      "name": "partyHighlight_PartyAb_legend",
+      "value": null,
+      "on": [
+        {
+          "events": [
+            {
+              "source": "view",
+              "type": "click",
+              "markname": "PartyAb_legend_symbols"
+            },
+            {
+              "source": "view",
+              "type": "click",
+              "markname": "PartyAb_legend_labels"
+            },
+            {
+              "source": "view",
+              "type": "click",
+              "markname": "PartyAb_legend_entries"
+            }
+          ],
+          "update": "datum.value || item().items[0].items[0].datum.value",
+          "force": true
+        },
+        {
+          "events": [{"source": "view", "type": "click"}],
+          "update": "!event.item || !datum ? null : partyHighlight_PartyAb_legend",
+          "force": true
+        }
+      ]
     },
-    {"name": "winningPartyHighlight_tuple"},
     {
-      "name": "winningPartyHighlight_tuple_fields",
-      "value": [{"type": "E", "field": "preferredCandidate"}]
+      "name": "partyHighlight",
+      "update": "vlSelectionResolve(\"partyHighlight_store\", \"union\", true)"
     },
     {
-      "name": "winningPartyHighlight_toggle",
+      "name": "partyHighlight_tuple",
+      "update": "partyHighlight_PartyAb_legend !== null ? {fields: partyHighlight_tuple_fields, values: [partyHighlight_PartyAb_legend]} : null"
+    },
+    {
+      "name": "partyHighlight_tuple_fields",
+      "value": [{"type": "E", "field": "PartyAb"}]
+    },
+    {
+      "name": "partyHighlight_toggle",
       "value": false,
       "on": [
         {
@@ -79,11 +114,11 @@
       ]
     },
     {
-      "name": "winningPartyHighlight_modify",
+      "name": "partyHighlight_modify",
       "on": [
         {
-          "events": {"signal": "winningPartyHighlight_tuple"},
-          "update": "modify(\"winningPartyHighlight_store\", winningPartyHighlight_toggle ? null : winningPartyHighlight_tuple, winningPartyHighlight_toggle ? null : true, winningPartyHighlight_toggle ? winningPartyHighlight_tuple : null)"
+          "events": {"signal": "partyHighlight_tuple"},
+          "update": "modify(\"partyHighlight_store\", partyHighlight_toggle ? null : partyHighlight_tuple, partyHighlight_toggle ? null : true, partyHighlight_toggle ? partyHighlight_tuple : null)"
         }
       ]
     }
@@ -101,7 +136,7 @@
           "fill": {"scale": "color", "field": "PartyAb"},
           "opacity": [
             {
-              "test": "!(length(data(\"winningPartyHighlight_store\"))) || (vlSelectionTest(\"winningPartyHighlight_store\", datum))",
+              "test": "!(length(data(\"partyHighlight_store\"))) || (vlSelectionTest(\"partyHighlight_store\", datum))",
               "value": 0.9
             },
             {"value": 0.1}
@@ -141,8 +176,37 @@
       "fill": "color",
       "symbolType": "circle",
       "encode": {
+        "labels": {
+          "name": "PartyAb_legend_labels",
+          "interactive": true,
+          "update": {
+            "opacity": [
+              {
+                "test": "(!length(data(\"partyHighlight_store\")) || (partyHighlight[\"PartyAb\"] && indexof(partyHighlight[\"PartyAb\"], datum.value) >= 0))",
+                "value": 1
+              },
+              {"value": 0.35}
+            ]
+          }
+        },
         "symbols": {
-          "update": {"stroke": {"value": "white"}, "opacity": {"value": 0.9}}
+          "name": "PartyAb_legend_symbols",
+          "interactive": true,
+          "update": {
+            "stroke": {"value": "white"},
+            "opacity": [
+              {
+                "test": "(!length(data(\"partyHighlight_store\")) || (partyHighlight[\"PartyAb\"] && indexof(partyHighlight[\"PartyAb\"], datum.value) >= 0))",
+                "value": 0.9
+              },
+              {"value": 0.35}
+            ]
+          }
+        },
+        "entries": {
+          "name": "PartyAb_legend_entries",
+          "interactive": true,
+          "update": {"fill": {"value": "transparent"}}
         }
       }
     }

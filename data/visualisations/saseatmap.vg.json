@@ -1,0 +1,151 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "background": "white",
+  "padding": 5,
+  "width": 800,
+  "height": 800,
+  "title": {
+    "text": "South Australian Seat Distribution by Party",
+    "frame": "group"
+  },
+  "style": "cell",
+  "data": [
+    {"name": "winningPartyHighlight_store"},
+    {
+      "name": "source_1",
+      "url": "https://raw.githubusercontent.com/nthnlam/FIT3179/main/data/HouseMembersElectedDownload-24310.csv",
+      "format": {"type": "csv", "delimiter": ","}
+    },
+    {
+      "name": "source_0",
+      "url": "https://raw.githubusercontent.com/nthnlam/FIT3179/main/data/maps/australia/sa.topo.json",
+      "format": {"type": "topojson", "feature": "sa"},
+      "transform": [
+        {
+          "type": "lookup",
+          "from": "source_1",
+          "key": "DivisionNm",
+          "fields": ["properties.electorateName"],
+          "values": [
+            "DivisionNm",
+            "DivisionId",
+            "StateAb",
+            "GivenNm",
+            "Surname",
+            "PartyNm",
+            "PartyAb"
+          ]
+        },
+        {
+          "type": "formula",
+          "expr": "datum.GivenNm + ' ' + datum.Surname",
+          "as": "electedCandidate"
+        }
+      ]
+    }
+  ],
+  "projections": [
+    {
+      "name": "projection",
+      "size": {"signal": "[width, height]"},
+      "fit": {"signal": "data('source_0')"}
+    }
+  ],
+  "signals": [
+    {
+      "name": "unit",
+      "value": {},
+      "on": [
+        {"events": "mousemove", "update": "isTuple(group()) ? group() : unit"}
+      ]
+    },
+    {
+      "name": "winningPartyHighlight",
+      "update": "vlSelectionResolve(\"winningPartyHighlight_store\", \"union\", true)"
+    },
+    {"name": "winningPartyHighlight_tuple"},
+    {
+      "name": "winningPartyHighlight_tuple_fields",
+      "value": [{"type": "E", "field": "preferredCandidate"}]
+    },
+    {
+      "name": "winningPartyHighlight_toggle",
+      "value": false,
+      "on": [
+        {
+          "events": {"merge": [{"source": "view", "type": "click"}]},
+          "update": "event.shiftKey"
+        }
+      ]
+    },
+    {
+      "name": "winningPartyHighlight_modify",
+      "on": [
+        {
+          "events": {"signal": "winningPartyHighlight_tuple"},
+          "update": "modify(\"winningPartyHighlight_store\", winningPartyHighlight_toggle ? null : winningPartyHighlight_tuple, winningPartyHighlight_toggle ? null : true, winningPartyHighlight_toggle ? winningPartyHighlight_tuple : null)"
+        }
+      ]
+    }
+  ],
+  "marks": [
+    {
+      "name": "marks",
+      "type": "shape",
+      "style": ["geoshape"],
+      "interactive": true,
+      "from": {"data": "source_0"},
+      "encode": {
+        "update": {
+          "stroke": {"value": "white"},
+          "fill": {"scale": "color", "field": "PartyAb"},
+          "opacity": [
+            {
+              "test": "!(length(data(\"winningPartyHighlight_store\"))) || (vlSelectionTest(\"winningPartyHighlight_store\", datum))",
+              "value": 0.9
+            },
+            {"value": 0.1}
+          ],
+          "tooltip": {
+            "signal": "{\"Electorate\": isValid(datum[\"DivisionNm\"]) ? datum[\"DivisionNm\"] : \"\"+datum[\"DivisionNm\"], \"Elected Party\": isValid(datum[\"PartyNm\"]) ? datum[\"PartyNm\"] : \"\"+datum[\"PartyNm\"], \"Elected Candidate\": isValid(datum[\"electedCandidate\"]) ? datum[\"electedCandidate\"] : \"\"+datum[\"electedCandidate\"]}"
+          },
+          "ariaRoleDescription": {"value": "geoshape"},
+          "description": {
+            "signal": "\"Political Party: \" + (isValid(datum[\"PartyAb\"]) ? datum[\"PartyAb\"] : \"\"+datum[\"PartyAb\"]) + \"; Electorate: \" + (isValid(datum[\"DivisionNm\"]) ? datum[\"DivisionNm\"] : \"\"+datum[\"DivisionNm\"]) + \"; Elected Party: \" + (isValid(datum[\"PartyNm\"]) ? datum[\"PartyNm\"] : \"\"+datum[\"PartyNm\"]) + \"; Elected Candidate: \" + (isValid(datum[\"electedCandidate\"]) ? datum[\"electedCandidate\"] : \"\"+datum[\"electedCandidate\"])"
+          }
+        }
+      },
+      "transform": [{"type": "geoshape", "projection": "projection"}]
+    }
+  ],
+  "scales": [
+    {
+      "name": "color",
+      "type": "ordinal",
+      "domain": ["ALP", "LP", "LNP", "NP", "IND", "GRN", "XEN", "KAP"],
+      "range": [
+        "#d7301f",
+        "#0868ac",
+        "#9ecae1",
+        "#006837",
+        "#c994c7",
+        "#74c476",
+        "#feb24c",
+        "#ffffcc"
+      ]
+    }
+  ],
+  "legends": [
+    {
+      "title": "Political Party",
+      "fill": "color",
+      "symbolType": "circle",
+      "encode": {
+        "symbols": {
+          "update": {"stroke": {"value": "white"}, "opacity": {"value": 0.9}}
+        }
+      }
+    }
+  ],
+  "config": {}
+}

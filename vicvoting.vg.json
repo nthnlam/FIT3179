@@ -10,6 +10,7 @@
   },
   "style": "cell",
   "data": [
+    {"name": "winningPartyHighlight_store"},
     {
       "name": "source_1",
       "url": "https://raw.githubusercontent.com/nthnlam/FIT3179/main/current-data-tcp-15-04.csv",
@@ -66,16 +67,96 @@
       "fit": {"signal": "data('source_0')"}
     }
   ],
+  "signals": [
+    {
+      "name": "unit",
+      "value": {},
+      "on": [
+        {"events": "mousemove", "update": "isTuple(group()) ? group() : unit"}
+      ]
+    },
+    {
+      "name": "winningPartyHighlight_winningParty_legend",
+      "value": null,
+      "on": [
+        {
+          "events": [
+            {
+              "source": "view",
+              "type": "click",
+              "markname": "winningParty_legend_symbols"
+            },
+            {
+              "source": "view",
+              "type": "click",
+              "markname": "winningParty_legend_labels"
+            },
+            {
+              "source": "view",
+              "type": "click",
+              "markname": "winningParty_legend_entries"
+            }
+          ],
+          "update": "datum.value || item().items[0].items[0].datum.value",
+          "force": true
+        },
+        {
+          "events": [{"source": "view", "type": "click"}],
+          "update": "!event.item || !datum ? null : winningPartyHighlight_winningParty_legend",
+          "force": true
+        }
+      ]
+    },
+    {
+      "name": "winningPartyHighlight",
+      "update": "vlSelectionResolve(\"winningPartyHighlight_store\", \"union\", true)"
+    },
+    {
+      "name": "winningPartyHighlight_tuple",
+      "update": "winningPartyHighlight_winningParty_legend !== null ? {fields: winningPartyHighlight_tuple_fields, values: [winningPartyHighlight_winningParty_legend]} : null"
+    },
+    {
+      "name": "winningPartyHighlight_tuple_fields",
+      "value": [{"type": "E", "field": "winningParty"}]
+    },
+    {
+      "name": "winningPartyHighlight_toggle",
+      "value": false,
+      "on": [
+        {
+          "events": {"merge": [{"source": "view", "type": "click"}]},
+          "update": "event.shiftKey"
+        }
+      ]
+    },
+    {
+      "name": "winningPartyHighlight_modify",
+      "on": [
+        {
+          "events": {"signal": "winningPartyHighlight_tuple"},
+          "update": "modify(\"winningPartyHighlight_store\", winningPartyHighlight_toggle ? null : winningPartyHighlight_tuple, winningPartyHighlight_toggle ? null : true, winningPartyHighlight_toggle ? winningPartyHighlight_tuple : null)"
+        }
+      ]
+    }
+  ],
   "marks": [
     {
       "name": "marks",
       "type": "shape",
       "style": ["geoshape"],
+      "interactive": true,
       "from": {"data": "source_0"},
       "encode": {
         "update": {
           "stroke": {"value": "white"},
           "fill": {"scale": "color", "field": "winningParty"},
+          "opacity": [
+            {
+              "test": "!(length(data(\"winningPartyHighlight_store\"))) || (vlSelectionTest(\"winningPartyHighlight_store\", datum))",
+              "value": 0.9
+            },
+            {"value": 0.1}
+          ],
           "tooltip": {
             "signal": "{\"DivisionName\": isValid(datum[\"DivisionName\"]) ? datum[\"DivisionName\"] : \"\"+datum[\"DivisionName\"], \"First Preferred Candidate\": isValid(datum[\"PartyAbA\"]) ? datum[\"PartyAbA\"] : \"\"+datum[\"PartyAbA\"], \"FPC Votes\": format(datum[\"PreferenceVotesA\"], \"\"), \"Second Preferred Candidate\": isValid(datum[\"PartyAbB\"]) ? datum[\"PartyAbB\"] : \"\"+datum[\"PartyAbB\"], \"SPC Votes\": format(datum[\"PreferenceVotesB\"], \"\"), \"vote Population\": format(datum[\"votePopulation\"], \"\"), \"Elected Party\": isValid(datum[\"winningParty\"]) ? datum[\"winningParty\"] : \"\"+datum[\"winningParty\"], \"Percentage of Total Votes\": format(datum[\"percentageVotes\"], \".2f\")}"
           },
@@ -101,7 +182,40 @@
       "title": "Winning Party",
       "fill": "color",
       "symbolType": "circle",
-      "encode": {"symbols": {"update": {"stroke": {"value": "white"}}}}
+      "encode": {
+        "labels": {
+          "name": "winningParty_legend_labels",
+          "interactive": true,
+          "update": {
+            "opacity": [
+              {
+                "test": "(!length(data(\"winningPartyHighlight_store\")) || (winningPartyHighlight[\"winningParty\"] && indexof(winningPartyHighlight[\"winningParty\"], datum.value) >= 0))",
+                "value": 1
+              },
+              {"value": 0.35}
+            ]
+          }
+        },
+        "symbols": {
+          "name": "winningParty_legend_symbols",
+          "interactive": true,
+          "update": {
+            "stroke": {"value": "white"},
+            "opacity": [
+              {
+                "test": "(!length(data(\"winningPartyHighlight_store\")) || (winningPartyHighlight[\"winningParty\"] && indexof(winningPartyHighlight[\"winningParty\"], datum.value) >= 0))",
+                "value": 0.9
+              },
+              {"value": 0.35}
+            ]
+          }
+        },
+        "entries": {
+          "name": "winningParty_legend_entries",
+          "interactive": true,
+          "update": {"fill": {"value": "transparent"}}
+        }
+      }
     }
   ],
   "config": {}

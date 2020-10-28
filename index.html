@@ -6,8 +6,31 @@
   <script src="https://cdn.jsdelivr.net/npm/vega-lite@4"></script>
   <!-- Import vega-embed -->
   <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+  <script type="text/javascript">
+    function changeVis(state){
+      var visA = document.getElementById('vis1');
+      var visB = document.getElementById('vis2');
+      if (state=="All"){
+        var spec = "https://raw.githubusercontent.com/nthnlam/FIT3179/main/data/visualisations/ausvoting.vg.json";
+        vegaEmbed('#visAus2pc', spec).then(function(result) {}).catch(console.error);
+
+        var spec = "https://raw.githubusercontent.com/nthnlam/FIT3179/main/data/visualisations/ausseatmap.vg.json";
+        vegaEmbed('#visAusElected', spec).then(function(result) {}).catch(console.error);
+      }
+    }
+  </script>
 </head>
 <body>
+
+<div id="vis1"></div>
+<div id="vis2"></div>
+
+<select id="ddselect" onchange="changeVis(this)">
+  <option>All</option>
+  <option>ACT</option>
+  <option>NSW</option>
+  <option>VIC</option>
+</select>
 
 <div id="visAus2pc"></div>
 <div id="visAusElected"></div>

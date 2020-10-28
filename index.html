@@ -6,26 +6,6 @@
   <script src="https://cdn.jsdelivr.net/npm/vega-lite@4"></script>
   <!-- Import vega-embed -->
   <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
-
-  <script>
-    function ddlselect()
-    {
-      var d = document.getElementById("stateSelect");
-      if (d == "All") {
-        var spec = "https://raw.githubusercontent.com/nthnlam/FIT3179/main/data/visualisations/ausvoting.vg.json";
-        vegaEmbed('#vis1', spec).then(function(result) {}).catch(console.error);
-
-        var spec = "https://raw.githubusercontent.com/nthnlam/FIT3179/main/data/visualisations/ausseatmap.vg.json";
-        vegaEmbed('#vis2', spec).then(function(result) {}).catch(console.error);
-      } elseif (d == "ACT"){
-        var spec = "https://raw.githubusercontent.com/nthnlam/FIT3179/main/data/visualisations/actvoting.vg.json";
-        vegaEmbed('#vis1', spec).then(function(result) {}).catch(console.error);
-
-        var spec = "https://raw.githubusercontent.com/nthnlam/FIT3179/main/data/visualisations/actseatmap.vg.json";
-        vegaEmbed('#vis2', spec).then(function(result) {}).catch(console.error);
-      }
-    }
-  </script>
 </head>
 <body>
 
@@ -50,20 +30,6 @@
 <div id="visVicElected"></div>
 <div id="visWa2pc"></div>
 <div id="visWaElected"></div>
-
-
-<label for="state">Choose State/Territory:</label>
-<select name="state" id="stateSelect" onchange="ddlselect">
-  <option value="All">Show All</option>
-  <option value="ACT">Australian Capital Territory</option>
-  <option value="NSW">New South Wales</option>
-  <option value="NT">Northern Territory</option>
-  <option value="QLD">Queensland</option>
-  <option value="SA">South Australia</option>
-  <option value="TAS">Tasmania</option>
-  <option value="VIC">Victoria</option>
-  <option value="WA">Western Australia</option>
-</select>
 
 
 <script type="text/javascript">

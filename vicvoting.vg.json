@@ -81,7 +81,7 @@
           },
           "ariaRoleDescription": {"value": "geoshape"},
           "description": {
-            "signal": "\"winningParty: \" + (isValid(datum[\"winningParty\"]) ? datum[\"winningParty\"] : \"\"+datum[\"winningParty\"]) + \"; DivisionName: \" + (isValid(datum[\"DivisionName\"]) ? datum[\"DivisionName\"] : \"\"+datum[\"DivisionName\"]) + \"; First Preferred Candidate: \" + (isValid(datum[\"PartyAbA\"]) ? datum[\"PartyAbA\"] : \"\"+datum[\"PartyAbA\"]) + \"; FPC Votes: \" + (format(datum[\"PreferenceVotesA\"], \"\")) + \"; Second Preferred Candidate: \" + (isValid(datum[\"PartyAbB\"]) ? datum[\"PartyAbB\"] : \"\"+datum[\"PartyAbB\"]) + \"; SPC Votes: \" + (format(datum[\"PreferenceVotesB\"], \"\")) + \"; vote Population: \" + (format(datum[\"votePopulation\"], \"\")) + \"; Elected Party: \" + (isValid(datum[\"winningParty\"]) ? datum[\"winningParty\"] : \"\"+datum[\"winningParty\"]) + \"; Percentage of Total Votes: \" + (format(datum[\"percentageVotes\"], \".2f\"))"
+            "signal": "\"Winning Party: \" + (isValid(datum[\"winningParty\"]) ? datum[\"winningParty\"] : \"\"+datum[\"winningParty\"]) + \"; DivisionName: \" + (isValid(datum[\"DivisionName\"]) ? datum[\"DivisionName\"] : \"\"+datum[\"DivisionName\"]) + \"; First Preferred Candidate: \" + (isValid(datum[\"PartyAbA\"]) ? datum[\"PartyAbA\"] : \"\"+datum[\"PartyAbA\"]) + \"; FPC Votes: \" + (format(datum[\"PreferenceVotesA\"], \"\")) + \"; Second Preferred Candidate: \" + (isValid(datum[\"PartyAbB\"]) ? datum[\"PartyAbB\"] : \"\"+datum[\"PartyAbB\"]) + \"; SPC Votes: \" + (format(datum[\"PreferenceVotesB\"], \"\")) + \"; vote Population: \" + (format(datum[\"votePopulation\"], \"\")) + \"; Elected Party: \" + (isValid(datum[\"winningParty\"]) ? datum[\"winningParty\"] : \"\"+datum[\"winningParty\"]) + \"; Percentage of Total Votes: \" + (format(datum[\"percentageVotes\"], \".2f\"))"
           }
         }
       },
@@ -98,9 +98,9 @@
   ],
   "legends": [
     {
+      "title": "Winning Party",
       "fill": "color",
       "symbolType": "circle",
-      "title": "winningParty",
       "encode": {"symbols": {"update": {"stroke": {"value": "white"}}}}
     }
   ],

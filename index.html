@@ -9,14 +9,38 @@
 </head>
 <body>
 
-<div id="vis"></div>
-
+<div id="vis1"></div>
+<div id="vis2"></div>
+<div id="vis3"></div>
+<div id="vis4"></div>
+<div id="vis5"></div>
+<div id="vis6"></div>
+<div id="vis7"></div>
+<div id="vis8"></div>
+<div id="vis9"></div>
+  
 <script type="text/javascript">
-  var spec = "https://raw.githubusercontent.com/nthnlam/FIT3179/main/data/visualisations/ausvoting.vg.json";
-  vegaEmbed('#vis', spec).then(function(result) {
-    // Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
-  }).catch(console.error);
+  var spec1 = "https://raw.githubusercontent.com/nthnlam/FIT3179/main/data/visualisations/ausvoting.vg.json";
+  var spec2 = "https://raw.githubusercontent.com/nthnlam/FIT3179/main/data/visualisations/nswvoting.vg.json";
+  var spec3 = "https://raw.githubusercontent.com/nthnlam/FIT3179/main/data/visualisations/actvoting.vg.json";
+  var spec4 = "https://raw.githubusercontent.com/nthnlam/FIT3179/main/data/visualisations/ntvoting.vg.json";
+  var spec5 = "https://raw.githubusercontent.com/nthnlam/FIT3179/main/data/visualisations/qldvoting.vg.json";
+  var spec6 = "https://raw.githubusercontent.com/nthnlam/FIT3179/main/data/visualisations/savoting.vg.json";
+  var spec7 = "https://raw.githubusercontent.com/nthnlam/FIT3179/main/data/visualisations/tasvoting.vg.json";
+  var spec8 = "https://raw.githubusercontent.com/nthnlam/FIT3179/main/data/visualisations/vicvoting.vg.json";
+  var spec9 = "https://raw.githubusercontent.com/nthnlam/FIT3179/main/data/visualisations/wavoting.vg.json";
+  
+  vegaEmbed('#vis1', spec).then(function(result) {}).catch(console.error);
+  vegaEmbed('#vis2', spec).then(function(result) {}).catch(console.error);
+  vegaEmbed('#vis3', spec).then(function(result) {}).catch(console.error);
+  vegaEmbed('#vis4', spec).then(function(result) {}).catch(console.error);
+  vegaEmbed('#vis5', spec).then(function(result) {}).catch(console.error);
+  vegaEmbed('#vis6', spec).then(function(result) {}).catch(console.error);
+  vegaEmbed('#vis7', spec).then(function(result) {}).catch(console.error);
+  vegaEmbed('#vis8', spec).then(function(result) {}).catch(console.error);
+  vegaEmbed('#vis9', spec).then(function(result) {}).catch(console.error);
 </script>
+
 
 </body>
 </html>

@@ -12,7 +12,21 @@
 <div id="vis"></div>
 
 <script type="text/javascript">
-  var spec = "https://raw.githubusercontent.com/nthnlam/FIT3179/main/vicvoting.vg.json";
+  var spec = "https://raw.githubusercontent.com/nthnlam/FIT3179/main/data/visualisations/ausvoting.vg.json";
+  vegaEmbed('#vis', spec).then(function(result) {
+    // Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
+  }).catch(console.error);
+  
+</script>
+  <script type="text/javascript">
+  var spec = "https://github.com/nthnlam/FIT3179/blob/main/data/visualisations/vicvoting.vg.json";
+  vegaEmbed('#vis', spec).then(function(result) {
+    // Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
+  }).catch(console.error);
+    
+</script>
+  <script type="text/javascript">
+  var spec = "https://raw.githubusercontent.com/nthnlam/FIT3179/main/data/visualisations/nswvoting.vg.json";
   vegaEmbed('#vis', spec).then(function(result) {
     // Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
   }).catch(console.error);

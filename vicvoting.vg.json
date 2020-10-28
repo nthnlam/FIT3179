@@ -1,0 +1,108 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "background": "white",
+  "padding": 5,
+  "width": 800,
+  "height": 1000,
+  "title": {
+    "text": "Victorian electorate voting preferences by two preferred candiate (2PC)",
+    "frame": "group"
+  },
+  "style": "cell",
+  "data": [
+    {
+      "name": "source_1",
+      "url": "https://raw.githubusercontent.com/nthnlam/FIT3179/main/current-data-tcp-15-04.csv",
+      "format": {"type": "csv", "delimiter": ","}
+    },
+    {
+      "name": "source_0",
+      "url": "https://raw.githubusercontent.com/nthnlam/FIT3179/main/vic.topo.json",
+      "format": {"type": "topojson", "feature": "vic"},
+      "transform": [
+        {
+          "type": "lookup",
+          "from": "source_1",
+          "key": "DivisionName",
+          "fields": ["properties.electorateName"],
+          "values": [
+            "DivisionName",
+            "DivisionId",
+            "PreferenceVotesA",
+            "CandidateIdA",
+            "PartyAbA",
+            "PreferenceVotesB",
+            "CandidateIdB",
+            "PartyAbB"
+          ]
+        },
+        {
+          "type": "formula",
+          "expr": "parseInt(datum.PreferenceVotesA) + parseInt(datum.PreferenceVotesB)",
+          "as": "votePopulation"
+        },
+        {
+          "type": "formula",
+          "expr": "datum.PreferenceVotesA > datum.PreferenceVotesB",
+          "as": "winner"
+        },
+        {
+          "type": "formula",
+          "expr": "(datum.winner ? datum.PartyAbA : datum.PartyAbB)",
+          "as": "winningParty"
+        },
+        {
+          "type": "formula",
+          "expr": "(datum.winner ? datum.PreferenceVotesA : datum.PreferenceVotesB) / datum.votePopulation * 100",
+          "as": "percentageVotes"
+        }
+      ]
+    }
+  ],
+  "projections": [
+    {
+      "name": "projection",
+      "size": {"signal": "[width, height]"},
+      "fit": {"signal": "data('source_0')"}
+    }
+  ],
+  "marks": [
+    {
+      "name": "marks",
+      "type": "shape",
+      "style": ["geoshape"],
+      "from": {"data": "source_0"},
+      "encode": {
+        "update": {
+          "stroke": {"value": "white"},
+          "fill": {"scale": "color", "field": "winningParty"},
+          "tooltip": {
+            "signal": "{\"DivisionName\": isValid(datum[\"DivisionName\"]) ? datum[\"DivisionName\"] : \"\"+datum[\"DivisionName\"], \"First Preferred Candidate\": isValid(datum[\"PartyAbA\"]) ? datum[\"PartyAbA\"] : \"\"+datum[\"PartyAbA\"], \"FPC Votes\": format(datum[\"PreferenceVotesA\"], \"\"), \"Second Preferred Candidate\": isValid(datum[\"PartyAbB\"]) ? datum[\"PartyAbB\"] : \"\"+datum[\"PartyAbB\"], \"SPC Votes\": format(datum[\"PreferenceVotesB\"], \"\"), \"vote Population\": format(datum[\"votePopulation\"], \"\"), \"Elected Party\": isValid(datum[\"winningParty\"]) ? datum[\"winningParty\"] : \"\"+datum[\"winningParty\"], \"Percentage of Total Votes\": format(datum[\"percentageVotes\"], \".2f\")}"
+          },
+          "ariaRoleDescription": {"value": "geoshape"},
+          "description": {
+            "signal": "\"winningParty: \" + (isValid(datum[\"winningParty\"]) ? datum[\"winningParty\"] : \"\"+datum[\"winningParty\"]) + \"; DivisionName: \" + (isValid(datum[\"DivisionName\"]) ? datum[\"DivisionName\"] : \"\"+datum[\"DivisionName\"]) + \"; First Preferred Candidate: \" + (isValid(datum[\"PartyAbA\"]) ? datum[\"PartyAbA\"] : \"\"+datum[\"PartyAbA\"]) + \"; FPC Votes: \" + (format(datum[\"PreferenceVotesA\"], \"\")) + \"; Second Preferred Candidate: \" + (isValid(datum[\"PartyAbB\"]) ? datum[\"PartyAbB\"] : \"\"+datum[\"PartyAbB\"]) + \"; SPC Votes: \" + (format(datum[\"PreferenceVotesB\"], \"\")) + \"; vote Population: \" + (format(datum[\"votePopulation\"], \"\")) + \"; Elected Party: \" + (isValid(datum[\"winningParty\"]) ? datum[\"winningParty\"] : \"\"+datum[\"winningParty\"]) + \"; Percentage of Total Votes: \" + (format(datum[\"percentageVotes\"], \".2f\"))"
+          }
+        }
+      },
+      "transform": [{"type": "geoshape", "projection": "projection"}]
+    }
+  ],
+  "scales": [
+    {
+      "name": "color",
+      "type": "ordinal",
+      "domain": ["ALP", "LP", "NP", "IND", "GRN"],
+      "range": ["#d7301f", "#0868ac", "#006837", "#d9d9d9", "#74c476"]
+    }
+  ],
+  "legends": [
+    {
+      "fill": "color",
+      "symbolType": "circle",
+      "title": "winningParty",
+      "encode": {"symbols": {"update": {"stroke": {"value": "white"}}}}
+    }
+  ],
+  "config": {}
+}

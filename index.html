@@ -9,6 +9,7 @@
 </head>
 <body>
 
+<div id="vis0"></div>
 <div id="vis1"></div>
 <div id="vis2"></div>
 <div id="vis3"></div>
@@ -21,6 +22,11 @@
   
 <script type="text/javascript">
   var spec = "https://raw.githubusercontent.com/nthnlam/FIT3179/main/data/visualisations/ausvoting.vg.json";  
+  vegaEmbed('#vis0', spec).then(function(result) {}).catch(console.error);
+</script>
+  
+<script type="text/javascript">
+  var spec = "https://raw.githubusercontent.com/nthnlam/FIT3179/main/data/visualisations/seatmap.vg.json";  
   vegaEmbed('#vis1', spec).then(function(result) {}).catch(console.error);
 </script>
 

@@ -18,8 +18,8 @@
     },
     {
       "name": "source_0",
-      "url": "https://raw.githubusercontent.com/nthnlam/FIT3179/main/data/maps/australia/vic.topo.json",
-      "format": {"type": "topojson", "feature": "vic"},
+      "url": "https://raw.githubusercontent.com/nthnlam/FIT3179/main/data/maps/australia/australia.topo.json",
+      "format": {"type": "topojson", "feature": "australia"},
       "transform": [
         {
           "type": "lookup",

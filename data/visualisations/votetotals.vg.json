@@ -77,7 +77,17 @@
       "name": "stateSelect",
       "bind": {
         "input": "select",
-        "labels": ["All", "ACT", "NSW", "NT", "QLD", "SA", "TAS", "VIC", "WA"],
+        "labels": [
+          "Show All",
+          "Australian Capital Territory",
+          "New South Wales",
+          "Northern Territory",
+          "Queensland",
+          "South Australia",
+          "Tasmania",
+          "Victoria",
+          "Western Australia"
+        ],
         "options": [null, "ACT", "NSW", "NT", "QLD", "SA", "TAS", "VIC", "WA"],
         "name": "State/Territory"
       }

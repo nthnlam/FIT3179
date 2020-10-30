@@ -1,4 +1,4 @@
-PartyAb,PartyNm,OrderOfAppearance,Contested,Nominations,Elected,OrdinaryVotes,OrdinaryPercentage,AbsentVotes,AbsentPercentage,ProvisionalVotes,ProvisionalPercentage,PrePollVotes,PrePollPercentage,PostalVotes,PostalPercentage,TotalVotes,TotalPercentage,TotalSwing
+PartyAb,PartyNm,OrderOfAppearance,Contested,Nominations,Elected,OrdinaryVotes,OrdinaryPercentage,AbsentVotes,AbsentPercentage,ProvisionalVotes,ProvisionalPercentage,PrePollVotes,PrePollPercentage,PostalVotes,PostalPercentage,Totalvotes,TotalPercentage,TotalSwing
 LP,Liberal,1,107,107,44,3276822,27.72,149061,25.81,10910,23.61,164327,27.67,388284,31.99,3989404,27.99,-0.68
 LNP,Liberal National Party,2,30,30,23,999946,8.46,35702,6.18,2650,5.73,45721,7.7,152382,12.56,1236401,8.67,0.15
 NP,The Nationals,3,23,23,10,576566,4.88,12864,2.23,916,1.98,18907,3.18,32980,2.72,642233,4.51,-0.1

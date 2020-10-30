@@ -1,0 +1,267 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "background": "white",
+  "padding": 5,
+  "width": 800,
+  "height": 800,
+  "title": {
+    "text": "Australian Electorate Voting Preferences By Two Candidate Preferred (2CP)",
+    "frame": "group"
+  },
+  "style": "cell",
+  "data": [
+    {"name": "winningPartyHighlight_store"},
+    {
+      "name": "source_1",
+      "url": "https://raw.githubusercontent.com/nthnlam/FIT3179/main/data/current-data-tcp-15-04-edited.csv",
+      "format": {"type": "csv", "delimiter": ","}
+    },
+    {
+      "name": "source_0",
+      "url": "https://raw.githubusercontent.com/nthnlam/FIT3179/main/data/maps/australia/australia.topo.json",
+      "format": {"type": "topojson", "feature": "australia"},
+      "transform": [
+        {
+          "type": "lookup",
+          "from": "source_1",
+          "key": "DivisionName",
+          "fields": ["properties.electorateName"],
+          "values": [
+            "State",
+            "DivisionName",
+            "DivisionId",
+            "PreferenceVotesA",
+            "CandidateIdA",
+            "PartyAbA",
+            "PreferenceVotesB",
+            "CandidateIdB",
+            "PartyAbB"
+          ]
+        },
+        {
+          "type": "formula",
+          "expr": "parseInt(datum.PreferenceVotesA) + parseInt(datum.PreferenceVotesB)",
+          "as": "votePopulation"
+        },
+        {
+          "type": "formula",
+          "expr": "datum.PreferenceVotesA > datum.PreferenceVotesB",
+          "as": "winner"
+        },
+        {
+          "type": "formula",
+          "expr": "(datum.winner ? datum.PartyAbA : datum.PartyAbB)",
+          "as": "preferredCandidate"
+        },
+        {
+          "type": "formula",
+          "expr": "(datum.winner ? datum.PreferenceVotesA : datum.PreferenceVotesB) / datum.votePopulation * 100",
+          "as": "percentageVotes"
+        },
+        {"type": "filter", "expr": "datum.percentageVotes >= minPctOfTotal"},
+        {
+          "type": "filter",
+          "expr": "datum.State == stateSelect || stateSelect == null"
+        }
+      ]
+    }
+  ],
+  "projections": [
+    {
+      "name": "projection",
+      "size": {"signal": "[width, height]"},
+      "fit": {"signal": "data('source_0')"}
+    }
+  ],
+  "signals": [
+    {
+      "name": "unit",
+      "value": {},
+      "on": [
+        {"events": "mousemove", "update": "isTuple(group()) ? group() : unit"}
+      ]
+    },
+    {
+      "name": "winningPartyHighlight_preferredCandidate_legend",
+      "value": null,
+      "on": [
+        {
+          "events": [
+            {
+              "source": "view",
+              "type": "click",
+              "markname": "preferredCandidate_legend_symbols"
+            },
+            {
+              "source": "view",
+              "type": "click",
+              "markname": "preferredCandidate_legend_labels"
+            },
+            {
+              "source": "view",
+              "type": "click",
+              "markname": "preferredCandidate_legend_entries"
+            }
+          ],
+          "update": "datum.value || item().items[0].items[0].datum.value",
+          "force": true
+        },
+        {
+          "events": [{"source": "view", "type": "click"}],
+          "update": "!event.item || !datum ? null : winningPartyHighlight_preferredCandidate_legend",
+          "force": true
+        }
+      ]
+    },
+    {
+      "name": "winningPartyHighlight",
+      "update": "vlSelectionResolve(\"winningPartyHighlight_store\", \"union\", true)"
+    },
+    {
+      "name": "minPctOfTotal",
+      "value": 50,
+      "bind": {
+        "input": "range",
+        "min": 50,
+        "max": 70,
+        "step": 0.25,
+        "name": "Min Percentage of Total Votes"
+      }
+    },
+    {
+      "name": "stateSelect",
+      "bind": {
+        "input": "select",
+        "labels": [
+          "Show All",
+          "Australian Capital Territory",
+          "New South Wales",
+          "Northern Territory",
+          "Queensland",
+          "South Australia",
+          "Tasmania",
+          "Victoria",
+          "Western Australia"
+        ],
+        "options": [null, "ACT", "NSW", "NT", "QLD", "SA", "TAS", "VIC", "WA"],
+        "name": "Select State/Territory"
+      }
+    },
+    {
+      "name": "winningPartyHighlight_tuple",
+      "update": "winningPartyHighlight_preferredCandidate_legend !== null ? {fields: winningPartyHighlight_tuple_fields, values: [winningPartyHighlight_preferredCandidate_legend]} : null"
+    },
+    {
+      "name": "winningPartyHighlight_tuple_fields",
+      "value": [{"type": "E", "field": "preferredCandidate"}]
+    },
+    {
+      "name": "winningPartyHighlight_toggle",
+      "value": false,
+      "on": [
+        {
+          "events": {"merge": [{"source": "view", "type": "click"}]},
+          "update": "event.shiftKey"
+        }
+      ]
+    },
+    {
+      "name": "winningPartyHighlight_modify",
+      "on": [
+        {
+          "events": {"signal": "winningPartyHighlight_tuple"},
+          "update": "modify(\"winningPartyHighlight_store\", winningPartyHighlight_toggle ? null : winningPartyHighlight_tuple, winningPartyHighlight_toggle ? null : true, winningPartyHighlight_toggle ? winningPartyHighlight_tuple : null)"
+        }
+      ]
+    }
+  ],
+  "marks": [
+    {
+      "name": "marks",
+      "type": "shape",
+      "style": ["geoshape"],
+      "interactive": true,
+      "from": {"data": "source_0"},
+      "encode": {
+        "update": {
+          "stroke": {"value": "white"},
+          "fill": {"scale": "color", "field": "preferredCandidate"},
+          "opacity": [
+            {
+              "test": "!(length(data(\"winningPartyHighlight_store\"))) || (vlSelectionTest(\"winningPartyHighlight_store\", datum))",
+              "value": 0.9
+            },
+            {"value": 0.1}
+          ],
+          "tooltip": {
+            "signal": "{\"Electorate\": isValid(datum[\"DivisionName\"]) ? datum[\"DivisionName\"] : \"\"+datum[\"DivisionName\"], \"First Preferred Candidate\": isValid(datum[\"PartyAbA\"]) ? datum[\"PartyAbA\"] : \"\"+datum[\"PartyAbA\"], \"FPC Votes\": format(datum[\"PreferenceVotesA\"], \"\"), \"Second Preferred Candidate\": isValid(datum[\"PartyAbB\"]) ? datum[\"PartyAbB\"] : \"\"+datum[\"PartyAbB\"], \"SPC Votes\": format(datum[\"PreferenceVotesB\"], \"\"), \"Voter Population\": format(datum[\"votePopulation\"], \"\"), \"Preferred Candidate\": isValid(datum[\"preferredCandidate\"]) ? datum[\"preferredCandidate\"] : \"\"+datum[\"preferredCandidate\"], \"Percentage of Total Votes\": format(datum[\"percentageVotes\"], \".2f\")}"
+          },
+          "ariaRoleDescription": {"value": "geoshape"},
+          "description": {
+            "signal": "\"Preferred Candidate: \" + (isValid(datum[\"preferredCandidate\"]) ? datum[\"preferredCandidate\"] : \"\"+datum[\"preferredCandidate\"]) + \"; Electorate: \" + (isValid(datum[\"DivisionName\"]) ? datum[\"DivisionName\"] : \"\"+datum[\"DivisionName\"]) + \"; First Preferred Candidate: \" + (isValid(datum[\"PartyAbA\"]) ? datum[\"PartyAbA\"] : \"\"+datum[\"PartyAbA\"]) + \"; FPC Votes: \" + (format(datum[\"PreferenceVotesA\"], \"\")) + \"; Second Preferred Candidate: \" + (isValid(datum[\"PartyAbB\"]) ? datum[\"PartyAbB\"] : \"\"+datum[\"PartyAbB\"]) + \"; SPC Votes: \" + (format(datum[\"PreferenceVotesB\"], \"\")) + \"; Voter Population: \" + (format(datum[\"votePopulation\"], \"\")) + \"; Percentage of Total Votes: \" + (format(datum[\"percentageVotes\"], \".2f\"))"
+          }
+        }
+      },
+      "transform": [{"type": "geoshape", "projection": "projection"}]
+    }
+  ],
+  "scales": [
+    {
+      "name": "color",
+      "type": "ordinal",
+      "domain": ["ALP", "LP", "LNP", "NP", "IND", "GRN", "XEN", "KAP"],
+      "range": [
+        "#d7301f",
+        "#0868ac",
+        "#9ecae1",
+        "#006837",
+        "#c994c7",
+        "#74c476",
+        "#feb24c",
+        "#ffffcc"
+      ]
+    }
+  ],
+  "legends": [
+    {
+      "title": "Preferred Candidate",
+      "fill": "color",
+      "symbolType": "circle",
+      "encode": {
+        "labels": {
+          "name": "preferredCandidate_legend_labels",
+          "interactive": true,
+          "update": {
+            "opacity": [
+              {
+                "test": "(!length(data(\"winningPartyHighlight_store\")) || (winningPartyHighlight[\"preferredCandidate\"] && indexof(winningPartyHighlight[\"preferredCandidate\"], datum.value) >= 0))",
+                "value": 1
+              },
+              {"value": 0.35}
+            ]
+          }
+        },
+        "symbols": {
+          "name": "preferredCandidate_legend_symbols",
+          "interactive": true,
+          "update": {
+            "stroke": {"value": "white"},
+            "opacity": [
+              {
+                "test": "(!length(data(\"winningPartyHighlight_store\")) || (winningPartyHighlight[\"preferredCandidate\"] && indexof(winningPartyHighlight[\"preferredCandidate\"], datum.value) >= 0))",
+                "value": 0.9
+              },
+              {"value": 0.35}
+            ]
+          }
+        },
+        "entries": {
+          "name": "preferredCandidate_legend_entries",
+          "interactive": true,
+          "update": {"fill": {"value": "transparent"}}
+        }
+      }
+    }
+  ],
+  "config": {}
+}

@@ -12,6 +12,7 @@
 
 <div id="visAus2cp"></div>
 <div id="visAusElected"></div>
+<div id="visVoteTotals"></div>
 
 
 <script type="text/javascript">
@@ -20,6 +21,9 @@
 
   var spec = "https://raw.githubusercontent.com/nthnlam/FIT3179/main/data/visualisations/ausseatmap.vg.json";
   vegaEmbed('#visAusElected', spec).then(function(result) {}).catch(console.error);
+
+  var spec = "https://raw.githubusercontent.com/nthnlam/FIT3179/main/data/visualisations/votetotals.vg.json";
+  vegaEmbed('#visVoteTotals', spec).then(function(result) {}).catch(console.error);
 </script>
 
 </body>

@@ -125,7 +125,7 @@
         "min": 50,
         "max": 70,
         "step": 0.25,
-        "name": "%Total Votes"
+        "name": "Min Percentage of Total Votes"
       }
     },
     {
@@ -144,7 +144,7 @@
           "Western Australia"
         ],
         "options": [null, "ACT", "NSW", "NT", "QLD", "SA", "TAS", "VIC", "WA"],
-        "name": "State/Territory"
+        "name": "Select State/Territory"
       }
     },
     {
@@ -212,8 +212,8 @@
       "domain": ["ALP", "LP", "LNP", "NP", "IND", "GRN", "XEN", "KAP"],
       "range": [
         "#d7301f",
-        "#0868ac",
-        "#78c679",
+        "#2171b5",
+        "#6baed6",
         "#006837",
         "#c994c7",
         "#74c476",

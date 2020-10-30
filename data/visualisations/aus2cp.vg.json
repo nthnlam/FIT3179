@@ -58,6 +58,11 @@
           "expr": "(datum.winner ? datum.PreferenceVotesA : datum.PreferenceVotesB) / datum.votePopulation * 100",
           "as": "percentageVotes"
         },
+        {
+          "type": "formula",
+          "expr": "datum.DivisionName + ', ' + datum.State",
+          "as": "electorate"
+        },
         {"type": "filter", "expr": "datum.percentageVotes >= minPctOfTotal"},
         {
           "type": "filter",
@@ -194,11 +199,11 @@
             {"value": 0.1}
           ],
           "tooltip": {
-            "signal": "{\"Electorate\": isValid(datum[\"DivisionName\"]) ? datum[\"DivisionName\"] : \"\"+datum[\"DivisionName\"], \"First Preferred Candidate\": isValid(datum[\"PartyAbA\"]) ? datum[\"PartyAbA\"] : \"\"+datum[\"PartyAbA\"], \"FPC Votes\": format(datum[\"PreferenceVotesA\"], \"\"), \"Second Preferred Candidate\": isValid(datum[\"PartyAbB\"]) ? datum[\"PartyAbB\"] : \"\"+datum[\"PartyAbB\"], \"SPC Votes\": format(datum[\"PreferenceVotesB\"], \"\"), \"Voter Population\": format(datum[\"votePopulation\"], \"\"), \"Preferred Candidate\": isValid(datum[\"preferredCandidate\"]) ? datum[\"preferredCandidate\"] : \"\"+datum[\"preferredCandidate\"], \"Percentage of Total Votes\": format(datum[\"percentageVotes\"], \".2f\")}"
+            "signal": "{\"Electorate\": isValid(datum[\"electorate\"]) ? datum[\"electorate\"] : \"\"+datum[\"electorate\"], \"First Preferred Candidate\": isValid(datum[\"PartyAbA\"]) ? datum[\"PartyAbA\"] : \"\"+datum[\"PartyAbA\"], \"FPC Votes\": format(datum[\"PreferenceVotesA\"], \"\"), \"Second Preferred Candidate\": isValid(datum[\"PartyAbB\"]) ? datum[\"PartyAbB\"] : \"\"+datum[\"PartyAbB\"], \"SPC Votes\": format(datum[\"PreferenceVotesB\"], \"\"), \"Voter Population\": format(datum[\"votePopulation\"], \"\"), \"Preferred Candidate\": isValid(datum[\"preferredCandidate\"]) ? datum[\"preferredCandidate\"] : \"\"+datum[\"preferredCandidate\"], \"Percentage of Total Votes\": format(datum[\"percentageVotes\"], \".2f\")}"
           },
           "ariaRoleDescription": {"value": "geoshape"},
           "description": {
-            "signal": "\"Preferred Candidate: \" + (isValid(datum[\"preferredCandidate\"]) ? datum[\"preferredCandidate\"] : \"\"+datum[\"preferredCandidate\"]) + \"; Electorate: \" + (isValid(datum[\"DivisionName\"]) ? datum[\"DivisionName\"] : \"\"+datum[\"DivisionName\"]) + \"; First Preferred Candidate: \" + (isValid(datum[\"PartyAbA\"]) ? datum[\"PartyAbA\"] : \"\"+datum[\"PartyAbA\"]) + \"; FPC Votes: \" + (format(datum[\"PreferenceVotesA\"], \"\")) + \"; Second Preferred Candidate: \" + (isValid(datum[\"PartyAbB\"]) ? datum[\"PartyAbB\"] : \"\"+datum[\"PartyAbB\"]) + \"; SPC Votes: \" + (format(datum[\"PreferenceVotesB\"], \"\")) + \"; Voter Population: \" + (format(datum[\"votePopulation\"], \"\")) + \"; Percentage of Total Votes: \" + (format(datum[\"percentageVotes\"], \".2f\"))"
+            "signal": "\"Preferred Candidate: \" + (isValid(datum[\"preferredCandidate\"]) ? datum[\"preferredCandidate\"] : \"\"+datum[\"preferredCandidate\"]) + \"; Electorate: \" + (isValid(datum[\"electorate\"]) ? datum[\"electorate\"] : \"\"+datum[\"electorate\"]) + \"; First Preferred Candidate: \" + (isValid(datum[\"PartyAbA\"]) ? datum[\"PartyAbA\"] : \"\"+datum[\"PartyAbA\"]) + \"; FPC Votes: \" + (format(datum[\"PreferenceVotesA\"], \"\")) + \"; Second Preferred Candidate: \" + (isValid(datum[\"PartyAbB\"]) ? datum[\"PartyAbB\"] : \"\"+datum[\"PartyAbB\"]) + \"; SPC Votes: \" + (format(datum[\"PreferenceVotesB\"], \"\")) + \"; Voter Population: \" + (format(datum[\"votePopulation\"], \"\")) + \"; Percentage of Total Votes: \" + (format(datum[\"percentageVotes\"], \".2f\"))"
           }
         }
       },
@@ -212,8 +217,8 @@
       "domain": ["ALP", "LP", "LNP", "NP", "IND", "GRN", "XEN", "KAP"],
       "range": [
         "#d7301f",
-        "#2171b5",
-        "#6baed6",
+        "#0868ac",
+        "#78c679",
         "#006837",
         "#c994c7",
         "#74c476",

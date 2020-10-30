@@ -125,7 +125,7 @@
         "min": 50,
         "max": 70,
         "step": 0.25,
-        "name": "Min Percentage of Total Votes"
+        "name": "%Total Votes"
       }
     },
     {
@@ -144,7 +144,7 @@
           "Western Australia"
         ],
         "options": [null, "ACT", "NSW", "NT", "QLD", "SA", "TAS", "VIC", "WA"],
-        "name": "Select State/Territory"
+        "name": "State/Territory"
       }
     },
     {
@@ -213,12 +213,12 @@
       "range": [
         "#d7301f",
         "#0868ac",
-        "#9ecae1",
+        "#78c679",
         "#006837",
         "#c994c7",
         "#74c476",
         "#feb24c",
-        "#ffffcc"
+        "#ffff44"
       ]
     }
   ],

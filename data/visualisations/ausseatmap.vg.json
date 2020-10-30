@@ -4,7 +4,7 @@
   "padding": 5,
   "width": 800,
   "height": 800,
-  "title": {"text": "Seat Distribution by Party", "frame": "group"},
+  "title": {"text": "2019 Post-Election Seat Distribution by Party", "frame": "group"},
   "style": "cell",
   "data": [
     {"name": "partyHighlight_store"},

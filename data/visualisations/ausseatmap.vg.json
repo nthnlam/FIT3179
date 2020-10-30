@@ -39,6 +39,11 @@
           "as": "electedCandidate"
         },
         {
+          "type": "formula",
+          "expr": "datum.DivisionNm + ', ' + datum.StateAb",
+          "as": "electorate"
+        },
+        {
           "type": "filter",
           "expr": "datum.StateAb == stateSelect || stateSelect == null"
         }
@@ -162,11 +167,11 @@
             {"value": 0.1}
           ],
           "tooltip": {
-            "signal": "{\"Electorate\": isValid(datum[\"DivisionNm\"]) ? datum[\"DivisionNm\"] : \"\"+datum[\"DivisionNm\"], \"Elected Party\": isValid(datum[\"PartyNm\"]) ? datum[\"PartyNm\"] : \"\"+datum[\"PartyNm\"], \"Elected Candidate\": isValid(datum[\"electedCandidate\"]) ? datum[\"electedCandidate\"] : \"\"+datum[\"electedCandidate\"]}"
+            "signal": "{\"Electorate\": isValid(datum[\"electorate\"]) ? datum[\"electorate\"] : \"\"+datum[\"electorate\"], \"Elected Party\": isValid(datum[\"PartyNm\"]) ? datum[\"PartyNm\"] : \"\"+datum[\"PartyNm\"], \"Elected Candidate\": isValid(datum[\"electedCandidate\"]) ? datum[\"electedCandidate\"] : \"\"+datum[\"electedCandidate\"]}"
           },
           "ariaRoleDescription": {"value": "geoshape"},
           "description": {
-            "signal": "\"Political Party: \" + (isValid(datum[\"PartyAb\"]) ? datum[\"PartyAb\"] : \"\"+datum[\"PartyAb\"]) + \"; Electorate: \" + (isValid(datum[\"DivisionNm\"]) ? datum[\"DivisionNm\"] : \"\"+datum[\"DivisionNm\"]) + \"; Elected Party: \" + (isValid(datum[\"PartyNm\"]) ? datum[\"PartyNm\"] : \"\"+datum[\"PartyNm\"]) + \"; Elected Candidate: \" + (isValid(datum[\"electedCandidate\"]) ? datum[\"electedCandidate\"] : \"\"+datum[\"electedCandidate\"])"
+            "signal": "\"Political Party: \" + (isValid(datum[\"PartyAb\"]) ? datum[\"PartyAb\"] : \"\"+datum[\"PartyAb\"]) + \"; Electorate: \" + (isValid(datum[\"electorate\"]) ? datum[\"electorate\"] : \"\"+datum[\"electorate\"]) + \"; Elected Party: \" + (isValid(datum[\"PartyNm\"]) ? datum[\"PartyNm\"] : \"\"+datum[\"PartyNm\"]) + \"; Elected Candidate: \" + (isValid(datum[\"electedCandidate\"]) ? datum[\"electedCandidate\"] : \"\"+datum[\"electedCandidate\"])"
           }
         }
       },

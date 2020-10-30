@@ -5,7 +5,7 @@
   "width": 800,
   "height": 800,
   "title": {
-    "text": "Historical Australian Electorate Voting Preferences By Two Candidate Preferred (2CP)",
+    "text": "2019 Pre-election Australian Electorate Voting Preferences By Two Candidate Preferred (2CP)",
     "frame": "group"
   },
   "style": "cell",
@@ -199,11 +199,11 @@
             {"value": 0.1}
           ],
           "tooltip": {
-            "signal": "{\"Electorate\": isValid(datum[\"electorate\"]) ? datum[\"electorate\"] : \"\"+datum[\"electorate\"], \"First Preferred Candidate\": isValid(datum[\"PartyAbA\"]) ? datum[\"PartyAbA\"] : \"\"+datum[\"PartyAbA\"], \"FPC Votes\": format(datum[\"PreferenceVotesA\"], \"\"), \"Second Preferred Candidate\": isValid(datum[\"PartyAbB\"]) ? datum[\"PartyAbB\"] : \"\"+datum[\"PartyAbB\"], \"SPC Votes\": format(datum[\"PreferenceVotesB\"], \"\"), \"Voter Population\": format(datum[\"votePopulation\"], \"\"), \"Preferred Candidate\": isValid(datum[\"preferredCandidate\"]) ? datum[\"preferredCandidate\"] : \"\"+datum[\"preferredCandidate\"], \"Percentage of Total Votes\": format(datum[\"percentageVotes\"], \".2f\")}"
+            "signal": "{\"Electorate\": isValid(datum[\"electorate\"]) ? datum[\"electorate\"] : \"\"+datum[\"electorate\"], \"First Preferred Candidate\": isValid(datum[\"PartyAbA\"]) ? datum[\"PartyAbA\"] : \"\"+datum[\"PartyAbA\"], \"FPC Votes\": format(datum[\"PreferenceVotesA\"], \",\"), \"Second Preferred Candidate\": isValid(datum[\"PartyAbB\"]) ? datum[\"PartyAbB\"] : \"\"+datum[\"PartyAbB\"], \"SPC Votes\": format(datum[\"PreferenceVotesB\"], \",\"), \"Voter Population\": format(datum[\"votePopulation\"], \",\"), \"Preferred Candidate\": isValid(datum[\"preferredCandidate\"]) ? datum[\"preferredCandidate\"] : \"\"+datum[\"preferredCandidate\"], \"Percentage of Total Votes\": format(datum[\"percentageVotes\"], \".2f\")}"
           },
           "ariaRoleDescription": {"value": "geoshape"},
           "description": {
-            "signal": "\"Preferred Candidate: \" + (isValid(datum[\"preferredCandidate\"]) ? datum[\"preferredCandidate\"] : \"\"+datum[\"preferredCandidate\"]) + \"; Electorate: \" + (isValid(datum[\"electorate\"]) ? datum[\"electorate\"] : \"\"+datum[\"electorate\"]) + \"; First Preferred Candidate: \" + (isValid(datum[\"PartyAbA\"]) ? datum[\"PartyAbA\"] : \"\"+datum[\"PartyAbA\"]) + \"; FPC Votes: \" + (format(datum[\"PreferenceVotesA\"], \"\")) + \"; Second Preferred Candidate: \" + (isValid(datum[\"PartyAbB\"]) ? datum[\"PartyAbB\"] : \"\"+datum[\"PartyAbB\"]) + \"; SPC Votes: \" + (format(datum[\"PreferenceVotesB\"], \"\")) + \"; Voter Population: \" + (format(datum[\"votePopulation\"], \"\")) + \"; Percentage of Total Votes: \" + (format(datum[\"percentageVotes\"], \".2f\"))"
+            "signal": "\"Preferred Candidate: \" + (isValid(datum[\"preferredCandidate\"]) ? datum[\"preferredCandidate\"] : \"\"+datum[\"preferredCandidate\"]) + \"; Electorate: \" + (isValid(datum[\"electorate\"]) ? datum[\"electorate\"] : \"\"+datum[\"electorate\"]) + \"; First Preferred Candidate: \" + (isValid(datum[\"PartyAbA\"]) ? datum[\"PartyAbA\"] : \"\"+datum[\"PartyAbA\"]) + \"; FPC Votes: \" + (format(datum[\"PreferenceVotesA\"], \",\")) + \"; Second Preferred Candidate: \" + (isValid(datum[\"PartyAbB\"]) ? datum[\"PartyAbB\"] : \"\"+datum[\"PartyAbB\"]) + \"; SPC Votes: \" + (format(datum[\"PreferenceVotesB\"], \",\")) + \"; Voter Population: \" + (format(datum[\"votePopulation\"], \",\")) + \"; Percentage of Total Votes: \" + (format(datum[\"percentageVotes\"], \".2f\"))"
           }
         }
       },

@@ -105,10 +105,10 @@
           "innerRadius": {"value": 20},
           "fill": {"scale": "color", "field": "PartyAb"},
           "tooltip": {
-            "signal": "{\"Party Name\": isValid(datum[\"PartyNm\"]) ? datum[\"PartyNm\"] : \"\"+datum[\"PartyNm\"], \"Total Votes\": format(datum[\"TotalVotes\"], \"\"), \"Seats Won\": format(datum[\"Elected\"], \"\"), \"Total Percentage\": format(datum[\"TotalPercentage\"], \"\"), \"Total Swing\": format(datum[\"TotalSwing\"], \"\")}"
+            "signal": "{\"Party Name\": isValid(datum[\"PartyNm\"]) ? datum[\"PartyNm\"] : \"\"+datum[\"PartyNm\"], \"Total Votes\": format(datum[\"TotalVotes\"], \",\"), \"Seats Won\": format(datum[\"Elected\"], \"\"), \"Total Percentage\": format(datum[\"TotalPercentage\"], \"\"), \"Total Swing\": format(datum[\"TotalSwing\"], \"\")}"
           },
           "description": {
-            "signal": "\"TotalVotes: \" + (format(datum[\"TotalVotes\"], \"\")) + \"; Political Party: \" + (isValid(datum[\"PartyAb\"]) ? datum[\"PartyAb\"] : \"\"+datum[\"PartyAb\"]) + \"; Party Name: \" + (isValid(datum[\"PartyNm\"]) ? datum[\"PartyNm\"] : \"\"+datum[\"PartyNm\"]) + \"; Total Votes: \" + (format(datum[\"TotalVotes\"], \"\")) + \"; Seats Won: \" + (format(datum[\"Elected\"], \"\")) + \"; Total Percentage: \" + (format(datum[\"TotalPercentage\"], \"\")) + \"; Total Swing: \" + (format(datum[\"TotalSwing\"], \"\"))"
+            "signal": "\"TotalVotes: \" + (format(datum[\"TotalVotes\"], \"\")) + \"; Political Party: \" + (isValid(datum[\"PartyAb\"]) ? datum[\"PartyAb\"] : \"\"+datum[\"PartyAb\"]) + \"; Party Name: \" + (isValid(datum[\"PartyNm\"]) ? datum[\"PartyNm\"] : \"\"+datum[\"PartyNm\"]) + \"; Total Votes: \" + (format(datum[\"TotalVotes\"], \",\")) + \"; Seats Won: \" + (format(datum[\"Elected\"], \"\")) + \"; Total Percentage: \" + (format(datum[\"TotalPercentage\"], \"\")) + \"; Total Swing: \" + (format(datum[\"TotalSwing\"], \"\"))"
           },
           "x": {"signal": "width", "mult": 0.5},
           "y": {"signal": "height", "mult": 0.5},
@@ -127,10 +127,10 @@
         "update": {
           "fill": {"scale": "color", "field": "PartyAb"},
           "tooltip": {
-            "signal": "{\"Party Name\": isValid(datum[\"PartyNm\"]) ? datum[\"PartyNm\"] : \"\"+datum[\"PartyNm\"], \"Total Votes\": format(datum[\"TotalVotes\"], \"\"), \"Seats Won\": format(datum[\"Elected\"], \"\"), \"Total Percentage\": format(datum[\"TotalPercentage\"], \"\"), \"Total Swing\": format(datum[\"TotalSwing\"], \"\")}"
+            "signal": "{\"Party Name\": isValid(datum[\"PartyNm\"]) ? datum[\"PartyNm\"] : \"\"+datum[\"PartyNm\"], \"Total Votes\": format(datum[\"TotalVotes\"], \",\"), \"Seats Won\": format(datum[\"Elected\"], \"\"), \"Total Percentage\": format(datum[\"TotalPercentage\"], \"\"), \"Total Swing\": format(datum[\"TotalSwing\"], \"\")}"
           },
           "description": {
-            "signal": "\"TotalVotes: \" + (format(datum[\"TotalVotes\"], \"\")) + \"; Political Party: \" + (isValid(datum[\"PartyAb\"]) ? datum[\"PartyAb\"] : \"\"+datum[\"PartyAb\"]) + \"; Party Name: \" + (isValid(datum[\"PartyNm\"]) ? datum[\"PartyNm\"] : \"\"+datum[\"PartyNm\"]) + \"; Total Votes: \" + (format(datum[\"TotalVotes\"], \"\")) + \"; Seats Won: \" + (format(datum[\"Elected\"], \"\")) + \"; Total Percentage: \" + (format(datum[\"TotalPercentage\"], \"\")) + \"; Total Swing: \" + (format(datum[\"TotalSwing\"], \"\")) + \"; PartyAb: \" + (isValid(datum[\"PartyAb\"]) ? datum[\"PartyAb\"] : \"\"+datum[\"PartyAb\"])"
+            "signal": "\"TotalVotes: \" + (format(datum[\"TotalVotes\"], \"\")) + \"; Political Party: \" + (isValid(datum[\"PartyAb\"]) ? datum[\"PartyAb\"] : \"\"+datum[\"PartyAb\"]) + \"; Party Name: \" + (isValid(datum[\"PartyNm\"]) ? datum[\"PartyNm\"] : \"\"+datum[\"PartyNm\"]) + \"; Total Votes: \" + (format(datum[\"TotalVotes\"], \",\")) + \"; Seats Won: \" + (format(datum[\"Elected\"], \"\")) + \"; Total Percentage: \" + (format(datum[\"TotalPercentage\"], \"\")) + \"; Total Swing: \" + (format(datum[\"TotalSwing\"], \"\")) + \"; PartyAb: \" + (isValid(datum[\"PartyAb\"]) ? datum[\"PartyAb\"] : \"\"+datum[\"PartyAb\"])"
           },
           "x": {"signal": "width", "mult": 0.5},
           "y": {"signal": "height", "mult": 0.5},

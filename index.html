@@ -13,7 +13,7 @@
 <div id="visAus2cp"></div>
 <div id="visAusElected"></div>
 <div id="visVoteTotals"></div>
-
+<div id="visVoteScatter"></div>
 
 <script type="text/javascript">
   var spec = "https://raw.githubusercontent.com/nthnlam/FIT3179/main/data/visualisations/aus2cp.vg.json";
@@ -24,6 +24,9 @@
 
   var spec = "https://raw.githubusercontent.com/nthnlam/FIT3179/main/data/visualisations/votetotals.vg.json";
   vegaEmbed('#visVoteTotals', spec).then(function(result) {}).catch(console.error);
+
+  var spec = "https://raw.githubusercontent.com/nthnlam/FIT3179/main/data/visualisations/votescatter.vg.json";
+  vegaEmbed('#visVoteScatter', spec).then(function(result) {}).catch(console.error);
 </script>
 
 </body>

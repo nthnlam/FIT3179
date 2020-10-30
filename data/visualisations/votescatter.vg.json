@@ -1,0 +1,398 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "background": "white",
+  "padding": 5,
+  "width": 400,
+  "height": 400,
+  "title": {"text": "Seat Distribution by Party", "frame": "group"},
+  "style": "cell",
+  "data": [
+    {"name": "grid_store"},
+    {"name": "stateHighlight_store"},
+    {
+      "name": "source_0",
+      "url": "https://raw.githubusercontent.com/nthnlam/FIT3179/main/data/HouseFirstPrefsByStateByPartyDownload-24310.csv",
+      "format": {"type": "csv", "delimiter": ","},
+      "transform": [
+        {
+          "type": "formula",
+          "expr": "datum.PartyNm + ', ' + datum.StateAb",
+          "as": "Party"
+        },
+        {"type": "filter", "expr": "datum.Contested >= minContested"},
+        {
+          "type": "filter",
+          "expr": "isValid(datum[\"TotalVotes\"]) && isFinite(+datum[\"TotalVotes\"]) && isValid(datum[\"Elected\"]) && isFinite(+datum[\"Elected\"]) && isValid(datum[\"Contested\"]) && isFinite(+datum[\"Contested\"])"
+        }
+      ]
+    }
+  ],
+  "signals": [
+    {
+      "name": "unit",
+      "value": {},
+      "on": [
+        {"events": "mousemove", "update": "isTuple(group()) ? group() : unit"}
+      ]
+    },
+    {
+      "name": "stateHighlight_StateAb_legend",
+      "value": null,
+      "on": [
+        {
+          "events": [
+            {
+              "source": "view",
+              "type": "click",
+              "markname": "StateAb_legend_symbols"
+            },
+            {
+              "source": "view",
+              "type": "click",
+              "markname": "StateAb_legend_labels"
+            },
+            {
+              "source": "view",
+              "type": "click",
+              "markname": "StateAb_legend_entries"
+            }
+          ],
+          "update": "datum.value || item().items[0].items[0].datum.value",
+          "force": true
+        },
+        {
+          "events": [{"source": "view", "type": "click"}],
+          "update": "!event.item || !datum ? null : stateHighlight_StateAb_legend",
+          "force": true
+        }
+      ]
+    },
+    {"name": "grid", "update": "vlSelectionResolve(\"grid_store\", \"union\")"},
+    {
+      "name": "stateHighlight",
+      "update": "vlSelectionResolve(\"stateHighlight_store\", \"union\", true)"
+    },
+    {
+      "name": "minContested",
+      "value": 0,
+      "bind": {
+        "input": "range",
+        "min": 0,
+        "max": 40,
+        "step": 1,
+        "name": "Min. Seats Contested"
+      }
+    },
+    {
+      "name": "grid_TotalVotes",
+      "on": [
+        {
+          "events": {"signal": "grid_translate_delta"},
+          "update": "panLinear(grid_translate_anchor.extent_x, -grid_translate_delta.x / width)"
+        },
+        {
+          "events": {"signal": "grid_zoom_delta"},
+          "update": "zoomLinear(domain(\"x\"), grid_zoom_anchor.x, grid_zoom_delta)"
+        },
+        {"events": [{"source": "scope", "type": "dblclick"}], "update": "null"}
+      ]
+    },
+    {
+      "name": "grid_Elected",
+      "on": [
+        {
+          "events": {"signal": "grid_translate_delta"},
+          "update": "panLinear(grid_translate_anchor.extent_y, grid_translate_delta.y / height)"
+        },
+        {
+          "events": {"signal": "grid_zoom_delta"},
+          "update": "zoomLinear(domain(\"y\"), grid_zoom_anchor.y, grid_zoom_delta)"
+        },
+        {"events": [{"source": "scope", "type": "dblclick"}], "update": "null"}
+      ]
+    },
+    {
+      "name": "grid_tuple",
+      "on": [
+        {
+          "events": [{"signal": "grid_TotalVotes || grid_Elected"}],
+          "update": "grid_TotalVotes && grid_Elected ? {unit: \"\", fields: grid_tuple_fields, values: [grid_TotalVotes,grid_Elected]} : null"
+        }
+      ]
+    },
+    {
+      "name": "grid_tuple_fields",
+      "value": [
+        {"field": "TotalVotes", "channel": "x", "type": "R"},
+        {"field": "Elected", "channel": "y", "type": "R"}
+      ]
+    },
+    {
+      "name": "grid_translate_anchor",
+      "value": {},
+      "on": [
+        {
+          "events": [{"source": "scope", "type": "mousedown"}],
+          "update": "{x: x(unit), y: y(unit), extent_x: domain(\"x\"), extent_y: domain(\"y\")}"
+        }
+      ]
+    },
+    {
+      "name": "grid_translate_delta",
+      "value": {},
+      "on": [
+        {
+          "events": [
+            {
+              "source": "window",
+              "type": "mousemove",
+              "consume": true,
+              "between": [
+                {"source": "scope", "type": "mousedown"},
+                {"source": "window", "type": "mouseup"}
+              ]
+            }
+          ],
+          "update": "{x: grid_translate_anchor.x - x(unit), y: grid_translate_anchor.y - y(unit)}"
+        }
+      ]
+    },
+    {
+      "name": "grid_zoom_anchor",
+      "on": [
+        {
+          "events": [{"source": "scope", "type": "wheel", "consume": true}],
+          "update": "{x: invert(\"x\", x(unit)), y: invert(\"y\", y(unit))}"
+        }
+      ]
+    },
+    {
+      "name": "grid_zoom_delta",
+      "on": [
+        {
+          "events": [{"source": "scope", "type": "wheel", "consume": true}],
+          "force": true,
+          "update": "pow(1.001, event.deltaY * pow(16, event.deltaMode))"
+        }
+      ]
+    },
+    {
+      "name": "grid_modify",
+      "on": [
+        {
+          "events": {"signal": "grid_tuple"},
+          "update": "modify(\"grid_store\", grid_tuple, true)"
+        }
+      ]
+    },
+    {
+      "name": "stateHighlight_tuple",
+      "update": "stateHighlight_StateAb_legend !== null ? {fields: stateHighlight_tuple_fields, values: [stateHighlight_StateAb_legend]} : null"
+    },
+    {
+      "name": "stateHighlight_tuple_fields",
+      "value": [{"type": "E", "field": "StateAb"}]
+    },
+    {
+      "name": "stateHighlight_toggle",
+      "value": false,
+      "on": [
+        {
+          "events": {"merge": [{"source": "view", "type": "click"}]},
+          "update": "event.shiftKey"
+        }
+      ]
+    },
+    {
+      "name": "stateHighlight_modify",
+      "on": [
+        {
+          "events": {"signal": "stateHighlight_tuple"},
+          "update": "modify(\"stateHighlight_store\", stateHighlight_toggle ? null : stateHighlight_tuple, stateHighlight_toggle ? null : true, stateHighlight_toggle ? stateHighlight_tuple : null)"
+        }
+      ]
+    }
+  ],
+  "marks": [
+    {
+      "name": "marks",
+      "type": "symbol",
+      "clip": true,
+      "style": ["circle"],
+      "interactive": true,
+      "from": {"data": "source_0"},
+      "encode": {
+        "update": {
+          "opacity": [
+            {
+              "test": "!(length(data(\"stateHighlight_store\"))) || (vlSelectionTest(\"stateHighlight_store\", datum))",
+              "value": 0.8
+            },
+            {"value": 0.1}
+          ],
+          "fill": {"scale": "color", "field": "StateAb"},
+          "tooltip": {
+            "signal": "{\"Party\": isValid(datum[\"Party\"]) ? datum[\"Party\"] : \"\"+datum[\"Party\"], \"Seats Contested\": isValid(datum[\"Contested\"]) ? datum[\"Contested\"] : \"\"+datum[\"Contested\"]}"
+          },
+          "ariaRoleDescription": {"value": "circle"},
+          "description": {
+            "signal": "\"TotalVotes: \" + (format(datum[\"TotalVotes\"], \"\")) + \"; Elected: \" + (format(datum[\"Elected\"], \"\")) + \"; StateAb: \" + (isValid(datum[\"StateAb\"]) ? datum[\"StateAb\"] : \"\"+datum[\"StateAb\"]) + \"; Contested: \" + (format(datum[\"Contested\"], \"\")) + \"; Party: \" + (isValid(datum[\"Party\"]) ? datum[\"Party\"] : \"\"+datum[\"Party\"]) + \"; Seats Contested: \" + (isValid(datum[\"Contested\"]) ? datum[\"Contested\"] : \"\"+datum[\"Contested\"])"
+          },
+          "x": {"scale": "x", "field": "TotalVotes"},
+          "y": {"scale": "y", "field": "Elected"},
+          "size": {"scale": "size", "field": "Contested"},
+          "shape": {"value": "circle"}
+        }
+      }
+    }
+  ],
+  "scales": [
+    {
+      "name": "x",
+      "type": "linear",
+      "domain": [0, 2000000],
+      "domainRaw": {"signal": "grid[\"TotalVotes\"]"},
+      "range": [0, {"signal": "width"}],
+      "nice": true,
+      "zero": true
+    },
+    {
+      "name": "y",
+      "type": "linear",
+      "domain": [0, 24],
+      "domainRaw": {"signal": "grid[\"Elected\"]"},
+      "range": [{"signal": "height"}, 0],
+      "nice": true,
+      "zero": true
+    },
+    {
+      "name": "color",
+      "type": "ordinal",
+      "domain": ["ACT", "NSW", "NT", "QLD", "SA", "TAS", "VIC", "WA"],
+      "range": [
+        "#e41a1c",
+        "#377eb8",
+        "#4daf4a",
+        "#984ea3",
+        "#ff7f00",
+        "#ffff33",
+        "#dd1c77",
+        "#fcbba1"
+      ]
+    },
+    {
+      "name": "size",
+      "type": "threshold",
+      "domain": [10, 20, 30, 40],
+      "range": {
+        "signal": "sequence(9, 361 + (361 - 9) / (5 - 1), (361 - 9) / (5 - 1))"
+      }
+    }
+  ],
+  "axes": [
+    {
+      "scale": "x",
+      "orient": "bottom",
+      "gridScale": "y",
+      "grid": true,
+      "tickCount": {"signal": "ceil(width/40)"},
+      "domain": false,
+      "labels": false,
+      "aria": false,
+      "maxExtent": 0,
+      "minExtent": 0,
+      "ticks": false,
+      "zindex": 0
+    },
+    {
+      "scale": "y",
+      "orient": "left",
+      "gridScale": "x",
+      "grid": true,
+      "tickCount": {"signal": "ceil(height/40)"},
+      "domain": false,
+      "labels": false,
+      "aria": false,
+      "maxExtent": 0,
+      "minExtent": 0,
+      "ticks": false,
+      "zindex": 0
+    },
+    {
+      "scale": "x",
+      "orient": "bottom",
+      "grid": false,
+      "title": "TotalVotes",
+      "labelFlush": true,
+      "labelOverlap": true,
+      "tickCount": {"signal": "ceil(width/40)"},
+      "zindex": 0
+    },
+    {
+      "scale": "y",
+      "orient": "left",
+      "grid": false,
+      "title": "Elected",
+      "labelOverlap": true,
+      "tickCount": {"signal": "ceil(height/40)"},
+      "zindex": 0
+    }
+  ],
+  "legends": [
+    {
+      "fill": "color",
+      "symbolType": "circle",
+      "title": "StateAb",
+      "encode": {
+        "labels": {
+          "name": "StateAb_legend_labels",
+          "interactive": true,
+          "update": {
+            "opacity": [
+              {
+                "test": "(!length(data(\"stateHighlight_store\")) || (stateHighlight[\"StateAb\"] && indexof(stateHighlight[\"StateAb\"], datum.value) >= 0))",
+                "value": 1
+              },
+              {"value": 0.35}
+            ]
+          }
+        },
+        "symbols": {
+          "name": "StateAb_legend_symbols",
+          "interactive": true,
+          "update": {
+            "opacity": [
+              {
+                "test": "(!length(data(\"stateHighlight_store\")) || (stateHighlight[\"StateAb\"] && indexof(stateHighlight[\"StateAb\"], datum.value) >= 0))",
+                "value": 0.8
+              },
+              {"value": 0.35}
+            ]
+          }
+        },
+        "entries": {
+          "name": "StateAb_legend_entries",
+          "interactive": true,
+          "update": {"fill": {"value": "transparent"}}
+        }
+      }
+    },
+    {
+      "size": "size",
+      "labelOverlap": "greedy",
+      "symbolType": "circle",
+      "title": "Contested",
+      "encode": {
+        "symbols": {
+          "update": {
+            "fill": {"value": "black"},
+            "fillOpacity": {"value": 0.8},
+            "opacity": {"value": 0.8},
+            "stroke": {"value": "transparent"}
+          }
+        }
+      }
+    }
+  ],
+  "config": {}
+}

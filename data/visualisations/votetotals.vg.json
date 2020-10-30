@@ -29,7 +29,10 @@
           "fields": [null],
           "sort": {"field": ["TotalVotes"], "order": ["descending"]}
         },
-        {"type": "filter", "expr": "datum.rank <= 5"}
+        {
+          "type": "filter",
+          "expr": "(stateSelect == null ? datum.rank <= 8: datum.rank <= 5)"
+        }
       ]
     },
     {

@@ -232,11 +232,11 @@
           ],
           "fill": {"scale": "color", "field": "StateAb"},
           "tooltip": {
-            "signal": "{\"Party\": isValid(datum[\"Party\"]) ? datum[\"Party\"] : \"\"+datum[\"Party\"], \"Seats Contested\": isValid(datum[\"Contested\"]) ? datum[\"Contested\"] : \"\"+datum[\"Contested\"]}"
+            "signal": "{\"Party\": isValid(datum[\"Party\"]) ? datum[\"Party\"] : \"\"+datum[\"Party\"], \"Seats Contested\": format(datum[\"Contested\"], \"\"), \"Seats Elected\": format(datum[\"Elected\"], \"\")}"
           },
           "ariaRoleDescription": {"value": "circle"},
           "description": {
-            "signal": "\"TotalVotes: \" + (format(datum[\"TotalVotes\"], \"\")) + \"; Elected: \" + (format(datum[\"Elected\"], \"\")) + \"; StateAb: \" + (isValid(datum[\"StateAb\"]) ? datum[\"StateAb\"] : \"\"+datum[\"StateAb\"]) + \"; Contested: \" + (format(datum[\"Contested\"], \"\")) + \"; Party: \" + (isValid(datum[\"Party\"]) ? datum[\"Party\"] : \"\"+datum[\"Party\"]) + \"; Seats Contested: \" + (isValid(datum[\"Contested\"]) ? datum[\"Contested\"] : \"\"+datum[\"Contested\"])"
+            "signal": "\"TotalVotes: \" + (format(datum[\"TotalVotes\"], \"\")) + \"; Elected: \" + (format(datum[\"Elected\"], \"\")) + \"; StateAb: \" + (isValid(datum[\"StateAb\"]) ? datum[\"StateAb\"] : \"\"+datum[\"StateAb\"]) + \"; Contested: \" + (format(datum[\"Contested\"], \"\")) + \"; Party: \" + (isValid(datum[\"Party\"]) ? datum[\"Party\"] : \"\"+datum[\"Party\"]) + \"; Seats Contested: \" + (format(datum[\"Contested\"], \"\")) + \"; Seats Elected: \" + (format(datum[\"Elected\"], \"\"))"
           },
           "x": {"scale": "x", "field": "TotalVotes"},
           "y": {"scale": "y", "field": "Elected"},

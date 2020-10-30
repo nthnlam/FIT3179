@@ -4,10 +4,10 @@
   "padding": 5,
   "width": 800,
   "height": 800,
-  "title": {"text": "Australian Seat Distribution by Party", "frame": "group"},
+  "title": {"text": "Seat Distribution by Party", "frame": "group"},
   "style": "cell",
   "data": [
-    {"name": "partyHighlight_store"},
+    {"name": "winningPartyHighlight_store"},
     {
       "name": "source_1",
       "url": "https://raw.githubusercontent.com/nthnlam/FIT3179/main/data/HouseMembersElectedDownload-24310.csv",
@@ -37,6 +37,10 @@
           "type": "formula",
           "expr": "datum.GivenNm + ' ' + datum.Surname",
           "as": "electedCandidate"
+        },
+        {
+          "type": "filter",
+          "expr": "datum.StateAb == stateSelect || stateSelect == null"
         }
       ]
     }
@@ -57,51 +61,35 @@
       ]
     },
     {
-      "name": "partyHighlight_PartyAb_legend",
-      "value": null,
-      "on": [
-        {
-          "events": [
-            {
-              "source": "view",
-              "type": "click",
-              "markname": "PartyAb_legend_symbols"
-            },
-            {
-              "source": "view",
-              "type": "click",
-              "markname": "PartyAb_legend_labels"
-            },
-            {
-              "source": "view",
-              "type": "click",
-              "markname": "PartyAb_legend_entries"
-            }
-          ],
-          "update": "datum.value || item().items[0].items[0].datum.value",
-          "force": true
-        },
-        {
-          "events": [{"source": "view", "type": "click"}],
-          "update": "!event.item || !datum ? null : partyHighlight_PartyAb_legend",
-          "force": true
-        }
-      ]
+      "name": "winningPartyHighlight",
+      "update": "vlSelectionResolve(\"winningPartyHighlight_store\", \"union\", true)"
     },
     {
-      "name": "partyHighlight",
-      "update": "vlSelectionResolve(\"partyHighlight_store\", \"union\", true)"
+      "name": "stateSelect",
+      "bind": {
+        "input": "select",
+        "labels": [
+          "Show All",
+          "Australian Capital Territory",
+          "New South Wales",
+          "Northern Territory",
+          "Queensland",
+          "South Australia",
+          "Tasmania",
+          "Victoria",
+          "Western Australia"
+        ],
+        "options": [null, "ACT", "NSW", "NT", "QLD", "SA", "TAS", "VIC", "WA"],
+        "name": "Select State/Territory"
+      }
+    },
+    {"name": "winningPartyHighlight_tuple"},
+    {
+      "name": "winningPartyHighlight_tuple_fields",
+      "value": [{"type": "E", "field": "preferredCandidate"}]
     },
     {
-      "name": "partyHighlight_tuple",
-      "update": "partyHighlight_PartyAb_legend !== null ? {fields: partyHighlight_tuple_fields, values: [partyHighlight_PartyAb_legend]} : null"
-    },
-    {
-      "name": "partyHighlight_tuple_fields",
-      "value": [{"type": "E", "field": "PartyAb"}]
-    },
-    {
-      "name": "partyHighlight_toggle",
+      "name": "winningPartyHighlight_toggle",
       "value": false,
       "on": [
         {
@@ -111,11 +99,11 @@
       ]
     },
     {
-      "name": "partyHighlight_modify",
+      "name": "winningPartyHighlight_modify",
       "on": [
         {
-          "events": {"signal": "partyHighlight_tuple"},
-          "update": "modify(\"partyHighlight_store\", partyHighlight_toggle ? null : partyHighlight_tuple, partyHighlight_toggle ? null : true, partyHighlight_toggle ? partyHighlight_tuple : null)"
+          "events": {"signal": "winningPartyHighlight_tuple"},
+          "update": "modify(\"winningPartyHighlight_store\", winningPartyHighlight_toggle ? null : winningPartyHighlight_tuple, winningPartyHighlight_toggle ? null : true, winningPartyHighlight_toggle ? winningPartyHighlight_tuple : null)"
         }
       ]
     }
@@ -133,7 +121,7 @@
           "fill": {"scale": "color", "field": "PartyAb"},
           "opacity": [
             {
-              "test": "!(length(data(\"partyHighlight_store\"))) || (vlSelectionTest(\"partyHighlight_store\", datum))",
+              "test": "!(length(data(\"winningPartyHighlight_store\"))) || (vlSelectionTest(\"winningPartyHighlight_store\", datum))",
               "value": 0.9
             },
             {"value": 0.1}
@@ -173,37 +161,8 @@
       "fill": "color",
       "symbolType": "circle",
       "encode": {
-        "labels": {
-          "name": "PartyAb_legend_labels",
-          "interactive": true,
-          "update": {
-            "opacity": [
-              {
-                "test": "(!length(data(\"partyHighlight_store\")) || (partyHighlight[\"PartyAb\"] && indexof(partyHighlight[\"PartyAb\"], datum.value) >= 0))",
-                "value": 1
-              },
-              {"value": 0.35}
-            ]
-          }
-        },
         "symbols": {
-          "name": "PartyAb_legend_symbols",
-          "interactive": true,
-          "update": {
-            "stroke": {"value": "white"},
-            "opacity": [
-              {
-                "test": "(!length(data(\"partyHighlight_store\")) || (partyHighlight[\"PartyAb\"] && indexof(partyHighlight[\"PartyAb\"], datum.value) >= 0))",
-                "value": 0.9
-              },
-              {"value": 0.35}
-            ]
-          }
-        },
-        "entries": {
-          "name": "PartyAb_legend_entries",
-          "interactive": true,
-          "update": {"fill": {"value": "transparent"}}
+          "update": {"stroke": {"value": "white"}, "opacity": {"value": 0.9}}
         }
       }
     }

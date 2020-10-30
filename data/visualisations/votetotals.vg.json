@@ -4,7 +4,7 @@
   "padding": 5,
   "width": 500,
   "height": 400,
-  "title": {"text": "Total Votes per Party", "frame": "group"},
+  "title": {"text": "National Vote Totals per Party", "frame": "group"},
   "style": "cell",
   "data": [
     {
@@ -30,8 +30,9 @@
           "sort": {"field": ["TotalVotes"], "order": ["descending"]}
         },
         {
-          "type": "filter",
-          "expr": "(stateSelect == null ? datum.rank <= 8: datum.rank <= 5)"
+          "type": "formula",
+          "expr": "datum.rank < 6 ? datum.PartyAb : ''",
+          "as": "ranking"
         }
       ]
     },
@@ -39,35 +40,6 @@
       "name": "data_0",
       "source": "source_0",
       "transform": [
-        {
-          "type": "stack",
-          "groupby": [],
-          "field": "TotalVotes",
-          "sort": {"field": ["PartyAb"], "order": ["ascending"]},
-          "as": ["TotalVotes_start", "TotalVotes_end"],
-          "offset": "zero"
-        },
-        {
-          "type": "filter",
-          "expr": "isValid(datum[\"TotalVotes\"]) && isFinite(+datum[\"TotalVotes\"])"
-        }
-      ]
-    },
-    {
-      "name": "data_1",
-      "source": "source_0",
-      "transform": [
-        {
-          "type": "stack",
-          "groupby": [],
-          "field": "TotalVotes",
-          "sort": {
-            "field": ["PartyAb", "PartyAb"],
-            "order": ["ascending", "ascending"]
-          },
-          "as": ["TotalVotes_start", "TotalVotes_end"],
-          "offset": "zero"
-        },
         {
           "type": "filter",
           "expr": "isValid(datum[\"TotalVotes\"]) && isFinite(+datum[\"TotalVotes\"])"
@@ -106,18 +78,23 @@
         "update": {
           "stroke": {"value": "#ffffff"},
           "innerRadius": {"value": 20},
-          "fill": {"scale": "color", "field": "PartyAb"},
+          "cursor": {"value": "pointer"},
+          "fill": {"scale": "color", "field": "ranking"},
           "tooltip": {
             "signal": "{\"Party Name\": isValid(datum[\"PartyNm\"]) ? datum[\"PartyNm\"] : \"\"+datum[\"PartyNm\"], \"Total Votes\": format(datum[\"TotalVotes\"], \",\"), \"Seats Won\": format(datum[\"Elected\"], \"\"), \"Total Percentage\": format(datum[\"TotalPercentage\"], \"\"), \"Total Swing\": format(datum[\"TotalSwing\"], \"\")}"
           },
           "description": {
-            "signal": "\"TotalVotes: \" + (format(datum[\"TotalVotes\"], \"\")) + \"; Political Party: \" + (isValid(datum[\"PartyAb\"]) ? datum[\"PartyAb\"] : \"\"+datum[\"PartyAb\"]) + \"; Party Name: \" + (isValid(datum[\"PartyNm\"]) ? datum[\"PartyNm\"] : \"\"+datum[\"PartyNm\"]) + \"; Total Votes: \" + (format(datum[\"TotalVotes\"], \",\")) + \"; Seats Won: \" + (format(datum[\"Elected\"], \"\")) + \"; Total Percentage: \" + (format(datum[\"TotalPercentage\"], \"\")) + \"; Total Swing: \" + (format(datum[\"TotalSwing\"], \"\"))"
+            "signal": "\"ranking: \" + (isValid(datum[\"ranking\"]) ? datum[\"ranking\"] : \"\"+datum[\"ranking\"]) + \"; TotalVotes: \" + (format(datum[\"TotalVotes\"], \"\")) + \"; Political Party: \" + (isValid(datum[\"ranking\"]) ? datum[\"ranking\"] : \"\"+datum[\"ranking\"]) + \"; Party Name: \" + (isValid(datum[\"PartyNm\"]) ? datum[\"PartyNm\"] : \"\"+datum[\"PartyNm\"]) + \"; Total Votes: \" + (format(datum[\"TotalVotes\"], \",\")) + \"; Seats Won: \" + (format(datum[\"Elected\"], \"\")) + \"; Total Percentage: \" + (format(datum[\"TotalPercentage\"], \"\")) + \"; Total Swing: \" + (format(datum[\"TotalSwing\"], \"\"))"
           },
           "x": {"signal": "width", "mult": 0.5},
           "y": {"signal": "height", "mult": 0.5},
           "outerRadius": {"scale": "radius", "field": "TotalVotes"},
-          "startAngle": {"scale": "theta", "field": "TotalVotes_end"},
-          "endAngle": {"scale": "theta", "field": "TotalVotes_start"}
+          "startAngle": {"scale": "theta", "field": "ranking"},
+          "endAngle": {
+            "scale": "theta",
+            "field": "ranking",
+            "offset": {"scale": "theta", "band": 1}
+          }
         }
       }
     },
@@ -125,27 +102,22 @@
       "name": "layer_1_marks",
       "type": "text",
       "style": ["text"],
-      "from": {"data": "data_1"},
+      "from": {"data": "data_0"},
       "encode": {
         "update": {
-          "fill": {"scale": "color", "field": "PartyAb"},
-          "tooltip": {
-            "signal": "{\"Party Name\": isValid(datum[\"PartyNm\"]) ? datum[\"PartyNm\"] : \"\"+datum[\"PartyNm\"], \"Total Votes\": format(datum[\"TotalVotes\"], \",\"), \"Seats Won\": format(datum[\"Elected\"], \"\"), \"Total Percentage\": format(datum[\"TotalPercentage\"], \"\"), \"Total Swing\": format(datum[\"TotalSwing\"], \"\")}"
-          },
+          "fill": {"scale": "color", "field": "ranking"},
           "description": {
-            "signal": "\"TotalVotes: \" + (format(datum[\"TotalVotes\"], \"\")) + \"; Political Party: \" + (isValid(datum[\"PartyAb\"]) ? datum[\"PartyAb\"] : \"\"+datum[\"PartyAb\"]) + \"; Party Name: \" + (isValid(datum[\"PartyNm\"]) ? datum[\"PartyNm\"] : \"\"+datum[\"PartyNm\"]) + \"; Total Votes: \" + (format(datum[\"TotalVotes\"], \",\")) + \"; Seats Won: \" + (format(datum[\"Elected\"], \"\")) + \"; Total Percentage: \" + (format(datum[\"TotalPercentage\"], \"\")) + \"; Total Swing: \" + (format(datum[\"TotalSwing\"], \"\")) + \"; PartyAb: \" + (isValid(datum[\"PartyAb\"]) ? datum[\"PartyAb\"] : \"\"+datum[\"PartyAb\"])"
+            "signal": "\"ranking: \" + (isValid(datum[\"ranking\"]) ? datum[\"ranking\"] : \"\"+datum[\"ranking\"]) + \"; TotalVotes: \" + (format(datum[\"TotalVotes\"], \"\")) + \"; Political Party: \" + (isValid(datum[\"ranking\"]) ? datum[\"ranking\"] : \"\"+datum[\"ranking\"])"
           },
           "x": {"signal": "width", "mult": 0.5},
           "y": {"signal": "height", "mult": 0.5},
           "text": {
-            "signal": "isValid(datum[\"PartyAb\"]) ? datum[\"PartyAb\"] : \"\"+datum[\"PartyAb\"]"
+            "signal": "isValid(datum[\"ranking\"]) ? datum[\"ranking\"] : \"\"+datum[\"ranking\"]"
           },
           "align": {"value": "center"},
           "baseline": {"value": "middle"},
-          "radius": {"scale": "radius", "field": "TotalVotes", "offset": 25},
-          "theta": {
-            "signal": "scale(\"theta\", 0.5 * datum[\"TotalVotes_start\"] + 0.5 * datum[\"TotalVotes_end\"])"
-          }
+          "radius": {"scale": "radius", "field": "TotalVotes", "offset": 20},
+          "theta": {"scale": "theta", "field": "ranking", "band": 0.5}
         }
       }
     }
@@ -153,27 +125,18 @@
   "scales": [
     {
       "name": "theta",
-      "type": "linear",
+      "type": "band",
       "domain": {
-        "fields": [
-          {"data": "data_0", "field": "TotalVotes_start"},
-          {"data": "data_0", "field": "TotalVotes_end"},
-          {"data": "data_1", "field": "TotalVotes_start"},
-          {"data": "data_1", "field": "TotalVotes_end"}
-        ]
+        "data": "source_0",
+        "field": "ranking",
+        "sort": {"op": "mean", "field": "TotalVotes", "order": "descending"}
       },
-      "range": [0, 6.283185307179586],
-      "zero": true
+      "range": [0, 6.283185307179586]
     },
     {
       "name": "radius",
       "type": "sqrt",
-      "domain": {
-        "fields": [
-          {"data": "data_0", "field": "TotalVotes"},
-          {"data": "data_1", "field": "TotalVotes"}
-        ]
-      },
+      "domain": {"data": "data_0", "field": "TotalVotes"},
       "range": [20, {"signal": "min(width,height)/2"}],
       "zero": true
     },
@@ -191,7 +154,8 @@
         "KAP",
         "UAPP",
         "CLP",
-        "ON"
+        "ON",
+        ""
       ],
       "range": [
         "#d7301f",
@@ -204,7 +168,8 @@
         "#ffff44",
         "#000000",
         "#2171b5",
-        "#ec7014"
+        "#ec7014",
+        "#969696"
       ]
     }
   ],

@@ -41,8 +41,8 @@
     }
   ],
   "signals": [
-    {"name": "child_width", "value": 125},
-    {"name": "child_height", "value": 180},
+    {"name": "child_width", "value": 110},
+    {"name": "child_height", "value": 160},
     {
       "name": "unit",
       "value": {},
@@ -151,7 +151,7 @@
               },
               "x": {"scale": "x", "field": "X"},
               "y": {"scale": "y", "field": "Y"},
-              "size": {"value": 280},
+              "size": {"value": 230},
               "shape": {"value": "square"}
             }
           }

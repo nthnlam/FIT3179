@@ -41,8 +41,8 @@
     }
   ],
   "signals": [
-    {"name": "child_width", "value": 110},
-    {"name": "child_height", "value": 160},
+    {"name": "child_width", "value": 280},
+    {"name": "child_height", "value": 400},
     {
       "name": "unit",
       "value": {},
@@ -52,7 +52,7 @@
     },
     {"name": "pts", "update": "vlSelectionResolve(\"pts_store\", \"union\")"}
   ],
-  "layout": {"padding": 20, "bounds": "full", "align": "all"},
+  "layout": {"padding": 20, "bounds": "full", "align": "all", "columns": 4},
   "marks": [
     {
       "name": "facet-title",
@@ -151,7 +151,7 @@
               },
               "x": {"scale": "x", "field": "X"},
               "y": {"scale": "y", "field": "Y"},
-              "size": {"value": 230},
+              "size": {"value": 1300},
               "shape": {"value": "square"}
             }
           }

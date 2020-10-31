@@ -1,24 +1,24 @@
 {
   "$schema": "https://vega.github.io/schema/vega/v5.json",
-  "description": "A Rectangular Unit-Chart",
   "background": "white",
   "padding": 5,
-  "width": 600,
-  "height": 400,
-  "style": "cell",
+  "title": {"text": "Seat Distribution by Party", "anchor": "start"},
   "data": [
+    {"name": "pts_store"},
     {
       "name": "source_0",
       "url": "https://raw.githubusercontent.com/nthnlam/FIT3179/main/data/HouseMembersElectedDownload-24310.csv",
       "format": {"type": "csv", "delimiter": ","},
       "transform": [
+        {"type": "identifier", "as": "_vgsid_"},
         {
           "type": "window",
           "params": [null],
           "as": ["id"],
           "ops": ["row_number"],
           "fields": [null],
-          "sort": {"field": ["PartyNm"], "order": ["descending"]}
+          "sort": {"field": [], "order": []},
+          "groupby": ["PartyAb"]
         },
         {"type": "formula", "expr": "ceil(datum.id/ 10)", "as": "X"},
         {"type": "formula", "expr": "datum.id - (datum.X - 1) *10", "as": "Y"},
@@ -35,30 +35,119 @@
       ]
     }
   ],
+  "signals": [
+    {"name": "child_width", "value": 140},
+    {"name": "child_height", "value": 200},
+    {
+      "name": "unit",
+      "value": {},
+      "on": [
+        {"events": "mousemove", "update": "isTuple(group()) ? group() : unit"}
+      ]
+    },
+    {"name": "pts", "update": "vlSelectionResolve(\"pts_store\", \"union\")"}
+  ],
+  "layout": {"padding": 20, "bounds": "full", "align": "all", "columns": 4},
   "marks": [
     {
-      "name": "marks",
-      "type": "symbol",
-      "style": ["point"],
-      "from": {"data": "source_0"},
+      "name": "facet-title",
+      "type": "group",
+      "role": "column-title",
+      "title": {"text": "Party", "style": "guide-title", "offset": 10}
+    },
+    {
+      "name": "cell",
+      "type": "group",
+      "title": {
+        "text": {
+          "signal": "isValid(parent[\"PartyAb\"]) ? parent[\"PartyAb\"] : \"\"+parent[\"PartyAb\"]"
+        },
+        "style": "guide-label",
+        "frame": "group",
+        "offset": 10
+      },
+      "style": "cell",
+      "from": {
+        "facet": {"name": "facet", "data": "source_0", "groupby": ["PartyAb"]}
+      },
+      "sort": {"field": ["datum[\"PartyAb\"]"], "order": ["ascending"]},
       "encode": {
         "update": {
-          "opacity": {"value": 0.7},
-          "fill": {"scale": "color", "field": "PartyAb"},
-          "stroke": {"value": "#000000"},
-          "tooltip": {
-            "signal": "{\"Elected Candidate\": isValid(datum[\"electedMember\"]) ? datum[\"electedMember\"] : \"\"+datum[\"electedMember\"], \"Member for\": isValid(datum[\"electorate\"]) ? datum[\"electorate\"] : \"\"+datum[\"electorate\"]}"
-          },
-          "ariaRoleDescription": {"value": "point"},
-          "description": {
-            "signal": "\"X: \" + (isValid(datum[\"X\"]) ? datum[\"X\"] : \"\"+datum[\"X\"]) + \"; Y: \" + (isValid(datum[\"Y\"]) ? datum[\"Y\"] : \"\"+datum[\"Y\"]) + \"; PartyAb: \" + (isValid(datum[\"PartyAb\"]) ? datum[\"PartyAb\"] : \"\"+datum[\"PartyAb\"]) + \"; Elected Candidate: \" + (isValid(datum[\"electedMember\"]) ? datum[\"electedMember\"] : \"\"+datum[\"electedMember\"]) + \"; Member for: \" + (isValid(datum[\"electorate\"]) ? datum[\"electorate\"] : \"\"+datum[\"electorate\"])"
-          },
-          "x": {"scale": "x", "field": "X"},
-          "y": {"scale": "y", "field": "Y"},
-          "size": {"value": 1000},
-          "shape": {"value": "square"}
+          "width": {"signal": "child_width"},
+          "height": {"signal": "child_height"}
         }
-      }
+      },
+      "signals": [
+        {
+          "name": "facet",
+          "value": {},
+          "on": [
+            {
+              "events": [{"source": "scope", "type": "mousemove"}],
+              "update": "isTuple(facet) ? facet : group(\"cell\").datum"
+            }
+          ]
+        },
+        {
+          "name": "pts_tuple",
+          "on": [
+            {
+              "events": [{"source": "scope", "type": "mouseover"}],
+              "update": "datum && item().mark.marktype !== 'group' ? {unit: \"child\" + '__facet_facet_' + (facet[\"PartyAb\"]), fields: pts_tuple_fields, values: [(item().isVoronoi ? datum.datum : datum)[\"_vgsid_\"]]} : null",
+              "force": true
+            },
+            {
+              "events": [{"source": "scope", "type": "dblclick"}],
+              "update": "null"
+            }
+          ]
+        },
+        {
+          "name": "pts_tuple_fields",
+          "value": [{"type": "E", "field": "_vgsid_"}]
+        },
+        {
+          "name": "pts_modify",
+          "on": [
+            {
+              "events": {"signal": "pts_tuple"},
+              "update": "modify(\"pts_store\", pts_tuple, true)"
+            }
+          ]
+        }
+      ],
+      "marks": [
+        {
+          "name": "child_marks",
+          "type": "symbol",
+          "style": ["point"],
+          "interactive": true,
+          "from": {"data": "facet"},
+          "encode": {
+            "update": {
+              "opacity": [
+                {
+                  "test": "!(length(data(\"pts_store\"))) || (!(vlSelectionTest(\"pts_store\", datum)))",
+                  "value": 1
+                },
+                {"value": 0.5}
+              ],
+              "fill": {"scale": "color", "field": "PartyAb"},
+              "tooltip": {
+                "signal": "{\"Elected Candidate\": isValid(datum[\"electedMember\"]) ? datum[\"electedMember\"] : \"\"+datum[\"electedMember\"], \"Member for\": isValid(datum[\"electorate\"]) ? datum[\"electorate\"] : \"\"+datum[\"electorate\"], \"Party\": isValid(datum[\"PartyNm\"]) ? datum[\"PartyNm\"] : \"\"+datum[\"PartyNm\"]}"
+              },
+              "ariaRoleDescription": {"value": "point"},
+              "description": {
+                "signal": "\"X: \" + (isValid(datum[\"X\"]) ? datum[\"X\"] : \"\"+datum[\"X\"]) + \"; Y: \" + (isValid(datum[\"Y\"]) ? datum[\"Y\"] : \"\"+datum[\"Y\"]) + \"; PartyAb: \" + (isValid(datum[\"PartyAb\"]) ? datum[\"PartyAb\"] : \"\"+datum[\"PartyAb\"]) + \"; Elected Candidate: \" + (isValid(datum[\"electedMember\"]) ? datum[\"electedMember\"] : \"\"+datum[\"electedMember\"]) + \"; Member for: \" + (isValid(datum[\"electorate\"]) ? datum[\"electorate\"] : \"\"+datum[\"electorate\"]) + \"; Party: \" + (isValid(datum[\"PartyNm\"]) ? datum[\"PartyNm\"] : \"\"+datum[\"PartyNm\"])"
+              },
+              "x": {"scale": "x", "field": "X"},
+              "y": {"scale": "y", "field": "Y"},
+              "size": {"value": 300},
+              "shape": {"value": "square"}
+            }
+          }
+        }
+      ]
     }
   ],
   "scales": [
@@ -66,14 +155,18 @@
       "name": "x",
       "type": "point",
       "domain": {"data": "source_0", "field": "X", "sort": true},
-      "range": [0, {"signal": "width"}],
+      "range": [0, {"signal": "child_width"}],
       "padding": 0.5
     },
     {
       "name": "y",
       "type": "point",
-      "domain": {"data": "source_0", "field": "Y", "sort": true},
-      "range": [0, {"signal": "height"}],
+      "domain": {
+        "data": "source_0",
+        "field": "Y",
+        "sort": {"order": "descending", "field": "key"}
+      },
+      "range": [0, {"signal": "child_height"}],
       "padding": 0.5
     },
     {
@@ -97,12 +190,8 @@
       "fill": "color",
       "symbolType": "square",
       "title": "PartyAb",
-      "encode": {
-        "symbols": {
-          "update": {"stroke": {"value": "#000000"}, "opacity": {"value": 0.7}}
-        }
-      }
+      "encode": {"symbols": {"update": {"opacity": {"value": 1}}}}
     }
   ],
-  "config": {}
+  "config": {"style": {"cell": {"strokeOpacity": 0.1}}}
 }

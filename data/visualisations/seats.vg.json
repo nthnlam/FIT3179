@@ -2,161 +2,186 @@
   "$schema": "https://vega.github.io/schema/vega/v5.json",
   "background": "white",
   "padding": 5,
-  "width": 410,
-  "height": 400,
-  "title": {"text": "National Vote Totals per Party", "frame": "group"},
-  "style": "cell",
+  "title": {"text": "Seat Distribution by Party", "anchor": "middle"},
   "data": [
+    {"name": "pts_store"},
     {
       "name": "source_0",
-      "url": "https://raw.githubusercontent.com/nthnlam/FIT3179/main/data/HouseFirstPrefsByStateByPartywithAppendedNationalTotals.csv",
+      "url": "https://raw.githubusercontent.com/nthnlam/FIT3179/main/data/HouseMembersElectedDownload-24310.csv",
       "format": {"type": "csv", "delimiter": ","},
       "transform": [
-        {
-          "type": "formula",
-          "expr": "parseInt(datum.TotalVotes)",
-          "as": "TotalVotes"
-        },
-        {
-          "type": "filter",
-          "expr": "(stateSelect == null ? datum.StateAb == 'TOT': datum.StateAb == stateSelect)"
-        },
+        {"type": "identifier", "as": "_vgsid_"},
         {
           "type": "window",
           "params": [null],
-          "as": ["rank"],
-          "ops": ["rank"],
+          "as": ["id"],
+          "ops": ["row_number"],
           "fields": [null],
-          "sort": {"field": ["TotalVotes"], "order": ["descending"]}
+          "sort": {"field": [], "order": []},
+          "groupby": ["PartyAb"]
+        },
+        {"type": "formula", "expr": "ceil(datum.id/ 10)", "as": "X"},
+        {"type": "formula", "expr": "datum.id - (datum.X - 1) *10", "as": "Y"},
+        {
+          "type": "formula",
+          "expr": "datum.GivenNm + ' ' + datum.Surname",
+          "as": "electedMember"
         },
         {
           "type": "formula",
-          "expr": "datum.rank < 6 ? datum.PartyAb : ''",
-          "as": "ranking"
-        }
-      ]
-    },
-    {
-      "name": "data_0",
-      "source": "source_0",
-      "transform": [
+          "expr": "datum.DivisionNm + ', ' + datum.StateAb",
+          "as": "electorate"
+        },
         {
-          "type": "filter",
-          "expr": "isValid(datum[\"TotalVotes\"]) && isFinite(+datum[\"TotalVotes\"])"
+          "type": "formula",
+          "expr": "'https://www.google.com/search?q=' + datum.electedMember",
+          "as": "url"
         }
       ]
     }
   ],
   "signals": [
+    {"name": "child_width", "value": 140},
+    {"name": "child_height", "value": 200},
     {
-      "name": "stateSelect",
-      "bind": {
-        "input": "select",
-        "labels": [
-          "Show All",
-          "Australian Capital Territory",
-          "New South Wales",
-          "Northern Territory",
-          "Queensland",
-          "South Australia",
-          "Tasmania",
-          "Victoria",
-          "Western Australia"
-        ],
-        "options": [null, "ACT", "NSW", "NT", "QLD", "SA", "TAS", "VIC", "WA"],
-        "name": "State/Territory"
-      }
-    }
+      "name": "unit",
+      "value": {},
+      "on": [
+        {"events": "mousemove", "update": "isTuple(group()) ? group() : unit"}
+      ]
+    },
+    {"name": "pts", "update": "vlSelectionResolve(\"pts_store\", \"union\")"}
   ],
+  "layout": {"padding": 20, "bounds": "full", "align": "all"},
   "marks": [
     {
-      "name": "layer_0_marks",
-      "type": "arc",
-      "style": ["arc"],
-      "from": {"data": "data_0"},
-      "encode": {
-        "update": {
-          "stroke": {"value": "#ffffff"},
-          "innerRadius": {"value": 20},
-          "cursor": {"value": "pointer"},
-          "fill": {"scale": "color", "field": "ranking"},
-          "tooltip": {
-            "signal": "{\"Party Name\": isValid(datum[\"PartyNm\"]) ? datum[\"PartyNm\"] : \"\"+datum[\"PartyNm\"], \"Total Votes\": format(datum[\"TotalVotes\"], \",\"), \"Seats Won\": format(datum[\"Elected\"], \"\"), \"Total Percentage\": format(datum[\"TotalPercentage\"], \"\"), \"Total Swing\": format(datum[\"TotalSwing\"], \"\")}"
-          },
-          "description": {
-            "signal": "\"ranking: \" + (isValid(datum[\"ranking\"]) ? datum[\"ranking\"] : \"\"+datum[\"ranking\"]) + \"; TotalVotes: \" + (format(datum[\"TotalVotes\"], \"\")) + \"; Political Party: \" + (isValid(datum[\"ranking\"]) ? datum[\"ranking\"] : \"\"+datum[\"ranking\"]) + \"; Party Name: \" + (isValid(datum[\"PartyNm\"]) ? datum[\"PartyNm\"] : \"\"+datum[\"PartyNm\"]) + \"; Total Votes: \" + (format(datum[\"TotalVotes\"], \",\")) + \"; Seats Won: \" + (format(datum[\"Elected\"], \"\")) + \"; Total Percentage: \" + (format(datum[\"TotalPercentage\"], \"\")) + \"; Total Swing: \" + (format(datum[\"TotalSwing\"], \"\"))"
-          },
-          "x": {"signal": "width", "mult": 0.5},
-          "y": {"signal": "height", "mult": 0.5},
-          "outerRadius": {"scale": "radius", "field": "TotalVotes"},
-          "startAngle": {"scale": "theta", "field": "ranking"},
-          "endAngle": {
-            "scale": "theta",
-            "field": "ranking",
-            "offset": {"scale": "theta", "band": 1}
-          }
-        }
-      }
+      "name": "facet-title",
+      "type": "group",
+      "role": "column-title",
+      "title": {"text": "Party", "style": "guide-title", "offset": 10}
     },
     {
-      "name": "layer_1_marks",
-      "type": "text",
-      "style": ["text"],
-      "from": {"data": "data_0"},
+      "name": "cell",
+      "type": "group",
+      "title": {
+        "text": {
+          "signal": "isValid(parent[\"PartyNm\"]) ? parent[\"PartyNm\"] : \"\"+parent[\"PartyNm\"]"
+        },
+        "style": "guide-label",
+        "frame": "group",
+        "offset": 10
+      },
+      "style": "cell",
+      "from": {
+        "facet": {"name": "facet", "data": "source_0", "groupby": ["PartyNm"]}
+      },
+      "sort": {"field": ["datum[\"PartyNm\"]"], "order": ["ascending"]},
       "encode": {
         "update": {
-          "fill": {"scale": "color", "field": "ranking"},
-          "description": {
-            "signal": "\"ranking: \" + (isValid(datum[\"ranking\"]) ? datum[\"ranking\"] : \"\"+datum[\"ranking\"]) + \"; TotalVotes: \" + (format(datum[\"TotalVotes\"], \"\")) + \"; Political Party: \" + (isValid(datum[\"ranking\"]) ? datum[\"ranking\"] : \"\"+datum[\"ranking\"])"
-          },
-          "x": {"signal": "width", "mult": 0.5},
-          "y": {"signal": "height", "mult": 0.5},
-          "text": {
-            "signal": "isValid(datum[\"ranking\"]) ? datum[\"ranking\"] : \"\"+datum[\"ranking\"]"
-          },
-          "align": {"value": "center"},
-          "baseline": {"value": "middle"},
-          "radius": {"scale": "radius", "field": "TotalVotes", "offset": 10},
-          "theta": {"scale": "theta", "field": "ranking", "band": 0.5}
+          "width": {"signal": "child_width"},
+          "height": {"signal": "child_height"}
         }
-      }
+      },
+      "signals": [
+        {
+          "name": "facet",
+          "value": {},
+          "on": [
+            {
+              "events": [{"source": "scope", "type": "mousemove"}],
+              "update": "isTuple(facet) ? facet : group(\"cell\").datum"
+            }
+          ]
+        },
+        {
+          "name": "pts_tuple",
+          "on": [
+            {
+              "events": [{"source": "scope", "type": "mouseover"}],
+              "update": "datum && item().mark.marktype !== 'group' ? {unit: \"child\" + '__facet_facet_' + (facet[\"PartyNm\"]), fields: pts_tuple_fields, values: [(item().isVoronoi ? datum.datum : datum)[\"_vgsid_\"]]} : null",
+              "force": true
+            },
+            {
+              "events": [{"source": "scope", "type": "dblclick"}],
+              "update": "null"
+            }
+          ]
+        },
+        {
+          "name": "pts_tuple_fields",
+          "value": [{"type": "E", "field": "_vgsid_"}]
+        },
+        {
+          "name": "pts_modify",
+          "on": [
+            {
+              "events": {"signal": "pts_tuple"},
+              "update": "modify(\"pts_store\", pts_tuple, true)"
+            }
+          ]
+        }
+      ],
+      "marks": [
+        {
+          "name": "child_marks",
+          "type": "symbol",
+          "style": ["point"],
+          "interactive": true,
+          "from": {"data": "facet"},
+          "encode": {
+            "update": {
+              "opacity": [
+                {
+                  "test": "!(length(data(\"pts_store\"))) || (!(vlSelectionTest(\"pts_store\", datum)))",
+                  "value": 1
+                },
+                {"value": 0.5}
+              ],
+              "cursor": {"value": "pointer"},
+              "fill": {"scale": "color", "field": "PartyAb"},
+              "tooltip": {
+                "signal": "{\"Elected Candidate\": isValid(datum[\"electedMember\"]) ? datum[\"electedMember\"] : \"\"+datum[\"electedMember\"], \"Member for\": isValid(datum[\"electorate\"]) ? datum[\"electorate\"] : \"\"+datum[\"electorate\"], \"Party\": isValid(datum[\"PartyNm\"]) ? datum[\"PartyNm\"] : \"\"+datum[\"PartyNm\"]}"
+              },
+              "href": {
+                "signal": "isValid(datum[\"url\"]) ? datum[\"url\"] : \"\"+datum[\"url\"]"
+              },
+              "ariaRoleDescription": {"value": "point"},
+              "description": {
+                "signal": "\"X: \" + (isValid(datum[\"X\"]) ? datum[\"X\"] : \"\"+datum[\"X\"]) + \"; Y: \" + (isValid(datum[\"Y\"]) ? datum[\"Y\"] : \"\"+datum[\"Y\"]) + \"; PartyAb: \" + (isValid(datum[\"PartyAb\"]) ? datum[\"PartyAb\"] : \"\"+datum[\"PartyAb\"]) + \"; Elected Candidate: \" + (isValid(datum[\"electedMember\"]) ? datum[\"electedMember\"] : \"\"+datum[\"electedMember\"]) + \"; Member for: \" + (isValid(datum[\"electorate\"]) ? datum[\"electorate\"] : \"\"+datum[\"electorate\"]) + \"; Party: \" + (isValid(datum[\"PartyNm\"]) ? datum[\"PartyNm\"] : \"\"+datum[\"PartyNm\"]) + \"; url: \" + (isValid(datum[\"url\"]) ? datum[\"url\"] : \"\"+datum[\"url\"])"
+              },
+              "x": {"scale": "x", "field": "X"},
+              "y": {"scale": "y", "field": "Y"},
+              "size": {"value": 300},
+              "shape": {"value": "square"}
+            }
+          }
+        }
+      ]
     }
   ],
   "scales": [
     {
-      "name": "theta",
-      "type": "band",
-      "domain": {
-        "data": "source_0",
-        "field": "ranking",
-        "sort": {"op": "mean", "field": "TotalVotes", "order": "descending"}
-      },
-      "range": [0, 6.283185307179586]
+      "name": "x",
+      "type": "point",
+      "domain": {"data": "source_0", "field": "X", "sort": true},
+      "range": [0, {"signal": "child_width"}],
+      "padding": 0.5
     },
     {
-      "name": "radius",
-      "type": "sqrt",
-      "domain": {"data": "data_0", "field": "TotalVotes"},
-      "range": [20, {"signal": "min(width,height)/2"}],
-      "zero": true
+      "name": "y",
+      "type": "point",
+      "domain": {
+        "data": "source_0",
+        "field": "Y",
+        "sort": {"order": "descending", "field": "key"}
+      },
+      "range": [0, {"signal": "child_height"}],
+      "padding": 0.5
     },
     {
       "name": "color",
       "type": "ordinal",
-      "domain": [
-        "ALP",
-        "LP",
-        "LNP",
-        "NP",
-        "IND",
-        "GRN",
-        "XEN",
-        "KAP",
-        "UAPP",
-        "CLP",
-        "ON",
-        ""
-      ],
+      "domain": ["ALP", "LP", "LNP", "NP", "IND", "GRN", "XEN", "KAP"],
       "range": [
         "#d7301f",
         "#2171b5",
@@ -165,20 +190,8 @@
         "#c994c7",
         "#74c476",
         "#feb24c",
-        "#ffff44",
-        "#000000",
-        "#2171b5",
-        "#ec7014",
-        "#969696"
+        "#ffff44"
       ]
-    }
-  ],
-  "legends": [
-    {
-      "title": "Political Party",
-      "fill": "color",
-      "symbolType": "circle",
-      "encode": {"symbols": {"update": {"stroke": {"value": "#ffffff"}}}}
     }
   ],
   "config": {"style": {"cell": {"strokeOpacity": 0.3}}}

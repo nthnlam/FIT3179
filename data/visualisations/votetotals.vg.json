@@ -2,7 +2,7 @@
   "$schema": "https://vega.github.io/schema/vega/v5.json",
   "background": "white",
   "padding": 5,
-  "width": 500,
+  "width": 410,
   "height": 400,
   "title": {"text": "National Vote Totals per Party", "frame": "group"},
   "style": "cell",
@@ -116,7 +116,7 @@
           },
           "align": {"value": "center"},
           "baseline": {"value": "middle"},
-          "radius": {"scale": "radius", "field": "TotalVotes", "offset": 20},
+          "radius": {"scale": "radius", "field": "TotalVotes", "offset": 10},
           "theta": {"scale": "theta", "field": "ranking", "band": 0.5}
         }
       }
@@ -181,5 +181,5 @@
       "encode": {"symbols": {"update": {"stroke": {"value": "#ffffff"}}}}
     }
   ],
-  "config": {}
+  "config": {"style": {"cell": {"strokeOpacity": 0.3}}}
 }

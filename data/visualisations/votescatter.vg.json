@@ -50,12 +50,19 @@
         {
           "type": "aggregate",
           "groupby": [],
-          "ops": ["mean", "sum", "mean", "sum"],
-          "fields": ["TotalVotes", "TotalVotes", "Elected", "Contested"],
+          "ops": ["mean", "sum", "mean", "sum", "sum"],
+          "fields": [
+            "TotalVotes",
+            "TotalVotes",
+            "Elected",
+            "Elected",
+            "Contested"
+          ],
           "as": [
             "mean_TotalVotes",
             "sum_TotalVotes",
             "mean_Elected",
+            "sum_Elected",
             "sum_Contested"
           ]
         }
@@ -556,10 +563,10 @@
         "update": {
           "stroke": {"value": "red"},
           "tooltip": {
-            "signal": "{\"Mean of Seats Won\": format(datum[\"mean_Elected\"], \",.2f\"), \"Sum of Seats Contested\": format(datum[\"sum_Contested\"], \",.2f\")}"
+            "signal": "{\"Mean of Seats Won\": format(datum[\"mean_Elected\"], \",.2f\"), \"Sum of Seats Contested\": format(datum[\"sum_Contested\"], \",.2f\"), \"Sum of Seats Won\": format(datum[\"sum_Elected\"], \",.2f\")}"
           },
           "description": {
-            "signal": "\"Number of Seats: \" + (format(datum[\"mean_Elected\"], \"\")) + \"; Mean of Seats Won: \" + (format(datum[\"mean_Elected\"], \",.2f\")) + \"; Sum of Seats Contested: \" + (format(datum[\"sum_Contested\"], \",.2f\"))"
+            "signal": "\"Number of Seats: \" + (format(datum[\"mean_Elected\"], \"\")) + \"; Mean of Seats Won: \" + (format(datum[\"mean_Elected\"], \",.2f\")) + \"; Sum of Seats Contested: \" + (format(datum[\"sum_Contested\"], \",.2f\")) + \"; Sum of Seats Won: \" + (format(datum[\"sum_Elected\"], \",.2f\"))"
           },
           "x": {"field": {"group": "width"}},
           "x2": {"value": 0},

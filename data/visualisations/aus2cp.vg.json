@@ -2,8 +2,8 @@
   "$schema": "https://vega.github.io/schema/vega/v5.json",
   "background": "white",
   "padding": 5,
-  "width": 800,
-  "height": 800,
+  "width": 600,
+  "height": 600,
   "title": {
     "text": "2019 Pre-election Australian Electorate Voting Preferences By Two Candidate Preferred (2CP)",
     "frame": "group"

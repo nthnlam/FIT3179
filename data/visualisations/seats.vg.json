@@ -193,5 +193,5 @@
       "encode": {"symbols": {"update": {"opacity": {"value": 1}}}}
     }
   ],
-  "config": {"style": {"cell": {"strokeOpacity": 0.1}}}
+  "config": {"style": {"cell": {"strokeOpacity": 0.3}}}
 }

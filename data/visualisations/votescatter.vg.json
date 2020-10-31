@@ -50,9 +50,14 @@
         {
           "type": "aggregate",
           "groupby": [],
-          "ops": ["mean", "sum", "mean"],
-          "fields": ["TotalVotes", "Contested", "Elected"],
-          "as": ["mean_TotalVotes", "sum_Contested", "mean_Elected"]
+          "ops": ["mean", "sum", "mean", "sum"],
+          "fields": ["TotalVotes", "TotalVotes", "Elected", "Contested"],
+          "as": [
+            "mean_TotalVotes",
+            "sum_TotalVotes",
+            "mean_Elected",
+            "sum_Contested"
+          ]
         }
       ]
     },
@@ -551,10 +556,10 @@
         "update": {
           "stroke": {"value": "red"},
           "tooltip": {
-            "signal": "{\"Mean of Seats Won\": format(datum[\"mean_Elected\"], \",.2f\")}"
+            "signal": "{\"Mean of Seats Won\": format(datum[\"mean_Elected\"], \",.2f\"), \"Sum of Seats Contested\": format(datum[\"sum_Contested\"], \",.2f\")}"
           },
           "description": {
-            "signal": "\"Number of Seats: \" + (format(datum[\"mean_Elected\"], \"\")) + \"; Mean of Seats Won: \" + (format(datum[\"mean_Elected\"], \",.2f\"))"
+            "signal": "\"Number of Seats: \" + (format(datum[\"mean_Elected\"], \"\")) + \"; Mean of Seats Won: \" + (format(datum[\"mean_Elected\"], \",.2f\")) + \"; Sum of Seats Contested: \" + (format(datum[\"sum_Contested\"], \",.2f\"))"
           },
           "x": {"field": {"group": "width"}},
           "x2": {"value": 0},
@@ -573,10 +578,10 @@
         "update": {
           "stroke": {"value": "red"},
           "tooltip": {
-            "signal": "{\"Mean of Total Votes\": format(datum[\"mean_TotalVotes\"], \",.2f\"), \"Sum of Seats Contested\": format(datum[\"sum_Contested\"], \",.2f\")}"
+            "signal": "{\"Mean of Total First Preference Votes\": format(datum[\"mean_TotalVotes\"], \",.2f\"), \"Sum of First Preference Votes\": format(datum[\"sum_TotalVotes\"], \",.2f\")}"
           },
           "description": {
-            "signal": "\"Total Votes: \" + (format(datum[\"mean_TotalVotes\"], \"\")) + \"; Mean of Total Votes: \" + (format(datum[\"mean_TotalVotes\"], \",.2f\")) + \"; Sum of Seats Contested: \" + (format(datum[\"sum_Contested\"], \",.2f\"))"
+            "signal": "\"Total First Preference Votes: \" + (format(datum[\"mean_TotalVotes\"], \"\")) + \"; Mean of Total First Preference Votes: \" + (format(datum[\"mean_TotalVotes\"], \",.2f\")) + \"; Sum of First Preference Votes: \" + (format(datum[\"sum_TotalVotes\"], \",.2f\"))"
           },
           "x": {"scale": "x", "field": "mean_TotalVotes"},
           "y": {"value": 0},
@@ -705,7 +710,7 @@
       "scale": "x",
       "orient": "bottom",
       "grid": false,
-      "title": "Total Votes",
+      "title": "Total First Preference Votes",
       "labelFlush": true,
       "labelOverlap": true,
       "tickCount": {"signal": "ceil(width/40)"},

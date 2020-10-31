@@ -2,7 +2,7 @@
   "$schema": "https://vega.github.io/schema/vega/v5.json",
   "background": "white",
   "padding": 5,
-  "title": {"text": "Seat Distribution by Party", "anchor": "start"},
+  "title": {"text": "Seat Distribution by Party", "anchor": "middle"},
   "data": [
     {"name": "pts_store"},
     {
@@ -31,6 +31,11 @@
           "type": "formula",
           "expr": "datum.DivisionNm + ', ' + datum.StateAb",
           "as": "electorate"
+        },
+        {
+          "type": "formula",
+          "expr": "'https://www.google.com/search?q=' + datum.electedMember",
+          "as": "url"
         }
       ]
     }
@@ -47,7 +52,7 @@
     },
     {"name": "pts", "update": "vlSelectionResolve(\"pts_store\", \"union\")"}
   ],
-  "layout": {"padding": 20, "bounds": "full", "align": "all", "columns": 4},
+  "layout": {"padding": 20, "bounds": "full", "align": "all"},
   "marks": [
     {
       "name": "facet-title",
@@ -60,7 +65,7 @@
       "type": "group",
       "title": {
         "text": {
-          "signal": "isValid(parent[\"PartyAb\"]) ? parent[\"PartyAb\"] : \"\"+parent[\"PartyAb\"]"
+          "signal": "isValid(parent[\"PartyNm\"]) ? parent[\"PartyNm\"] : \"\"+parent[\"PartyNm\"]"
         },
         "style": "guide-label",
         "frame": "group",
@@ -68,9 +73,9 @@
       },
       "style": "cell",
       "from": {
-        "facet": {"name": "facet", "data": "source_0", "groupby": ["PartyAb"]}
+        "facet": {"name": "facet", "data": "source_0", "groupby": ["PartyNm"]}
       },
-      "sort": {"field": ["datum[\"PartyAb\"]"], "order": ["ascending"]},
+      "sort": {"field": ["datum[\"PartyNm\"]"], "order": ["ascending"]},
       "encode": {
         "update": {
           "width": {"signal": "child_width"},
@@ -93,7 +98,7 @@
           "on": [
             {
               "events": [{"source": "scope", "type": "mouseover"}],
-              "update": "datum && item().mark.marktype !== 'group' ? {unit: \"child\" + '__facet_facet_' + (facet[\"PartyAb\"]), fields: pts_tuple_fields, values: [(item().isVoronoi ? datum.datum : datum)[\"_vgsid_\"]]} : null",
+              "update": "datum && item().mark.marktype !== 'group' ? {unit: \"child\" + '__facet_facet_' + (facet[\"PartyNm\"]), fields: pts_tuple_fields, values: [(item().isVoronoi ? datum.datum : datum)[\"_vgsid_\"]]} : null",
               "force": true
             },
             {
@@ -132,13 +137,17 @@
                 },
                 {"value": 0.5}
               ],
+              "cursor": {"value": "pointer"},
               "fill": {"scale": "color", "field": "PartyAb"},
               "tooltip": {
                 "signal": "{\"Elected Candidate\": isValid(datum[\"electedMember\"]) ? datum[\"electedMember\"] : \"\"+datum[\"electedMember\"], \"Member for\": isValid(datum[\"electorate\"]) ? datum[\"electorate\"] : \"\"+datum[\"electorate\"], \"Party\": isValid(datum[\"PartyNm\"]) ? datum[\"PartyNm\"] : \"\"+datum[\"PartyNm\"]}"
               },
+              "href": {
+                "signal": "isValid(datum[\"url\"]) ? datum[\"url\"] : \"\"+datum[\"url\"]"
+              },
               "ariaRoleDescription": {"value": "point"},
               "description": {
-                "signal": "\"X: \" + (isValid(datum[\"X\"]) ? datum[\"X\"] : \"\"+datum[\"X\"]) + \"; Y: \" + (isValid(datum[\"Y\"]) ? datum[\"Y\"] : \"\"+datum[\"Y\"]) + \"; PartyAb: \" + (isValid(datum[\"PartyAb\"]) ? datum[\"PartyAb\"] : \"\"+datum[\"PartyAb\"]) + \"; Elected Candidate: \" + (isValid(datum[\"electedMember\"]) ? datum[\"electedMember\"] : \"\"+datum[\"electedMember\"]) + \"; Member for: \" + (isValid(datum[\"electorate\"]) ? datum[\"electorate\"] : \"\"+datum[\"electorate\"]) + \"; Party: \" + (isValid(datum[\"PartyNm\"]) ? datum[\"PartyNm\"] : \"\"+datum[\"PartyNm\"])"
+                "signal": "\"X: \" + (isValid(datum[\"X\"]) ? datum[\"X\"] : \"\"+datum[\"X\"]) + \"; Y: \" + (isValid(datum[\"Y\"]) ? datum[\"Y\"] : \"\"+datum[\"Y\"]) + \"; PartyAb: \" + (isValid(datum[\"PartyAb\"]) ? datum[\"PartyAb\"] : \"\"+datum[\"PartyAb\"]) + \"; Elected Candidate: \" + (isValid(datum[\"electedMember\"]) ? datum[\"electedMember\"] : \"\"+datum[\"electedMember\"]) + \"; Member for: \" + (isValid(datum[\"electorate\"]) ? datum[\"electorate\"] : \"\"+datum[\"electorate\"]) + \"; Party: \" + (isValid(datum[\"PartyNm\"]) ? datum[\"PartyNm\"] : \"\"+datum[\"PartyNm\"]) + \"; url: \" + (isValid(datum[\"url\"]) ? datum[\"url\"] : \"\"+datum[\"url\"])"
               },
               "x": {"scale": "x", "field": "X"},
               "y": {"scale": "y", "field": "Y"},
@@ -183,14 +192,6 @@
         "#feb24c",
         "#ffff44"
       ]
-    }
-  ],
-  "legends": [
-    {
-      "fill": "color",
-      "symbolType": "square",
-      "title": "PartyAb",
-      "encode": {"symbols": {"update": {"opacity": {"value": 1}}}}
     }
   ],
   "config": {"style": {"cell": {"strokeOpacity": 0.3}}}

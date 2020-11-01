@@ -2,8 +2,8 @@
   "$schema": "https://vega.github.io/schema/vega/v5.json",
   "background": "white",
   "padding": 5,
-  "width": 600,
-  "height": 600,
+  "width": 800,
+  "height": 800,
   "title": {
     "text": "2019 Post-election Australian Electorate Voting Preferences By Two Candidate Preferred (2CP)",
     "frame": "group"
@@ -91,7 +91,9 @@
     {
       "name": "projection",
       "size": {"signal": "[width, height]"},
-      "fit": {"signal": "data('source_0')"}
+      "fit": {"signal": "data('source_0')"},
+      "type": "conicConformal",
+      "rotate": [-130, 25, 0]
     }
   ],
   "signals": [

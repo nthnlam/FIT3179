@@ -75,7 +75,9 @@
     {
       "name": "projection",
       "size": {"signal": "[width, height]"},
-      "fit": {"signal": "data('source_0')"}
+      "fit": {"signal": "data('source_0')"},
+      "type": "conicConformal",
+      "rotate": [-130, 25, 0]
     }
   ],
   "signals": [
